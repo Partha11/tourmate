@@ -1,10 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterFragment">
 
+    <EditText
+        android:id="@+id/registerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textSize="20sp"/>
 
+    <EditText
+        android:id="@+id/registerUserEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="User Email"
+        android:textSize="20sp"
+        android:layout_below="@+id/registerName"/>
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/registerUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="User Name"
+        android:textSize="20sp"
+        android:layout_below="@+id/registerUserEmail"/>
+
+    <EditText
+        android:id="@+id/registerUserPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:layout_below="@id/registerUserName"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/registerContactNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contact Number"
+        android:layout_below="@+id/registerUserPassword"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/registerUserAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Address"
+        android:layout_below="@+id/registerContactNumber"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textAllCaps="false"
+        android:layout_below="@+id/registerUserAddress"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
