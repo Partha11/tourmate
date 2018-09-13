@@ -4,11 +4,25 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-public class RegisterFragment extends Fragment {
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
+
+public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     Context mContext;
 
@@ -19,6 +33,12 @@ public class RegisterFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private EditText fullName;
+    private EditText userEmail;
+    private EditText userPassword;
+
+    private Button registerButton;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -37,6 +57,8 @@ public class RegisterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getActivity().setTitle(R.string.register_title);
+
         if (getArguments() != null) {
 
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -45,10 +67,18 @@ public class RegisterFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+
+        fullName = view.findViewById(R.id.registerName);
+        userEmail = view.findViewById(R.id.registerUserEmail);
+        userPassword = view.findViewById(R.id.registerUserPassword);
+
+        registerButton = view.findViewById(R.id.registerButton);
+        registerButton.setOnClickListener(this);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -79,12 +109,34 @@ public class RegisterFragment extends Fragment {
 
     @Override
     public void onDetach() {
+
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v == registerButton) {
+
+            String userEmailString = userEmail.getText().toString().trim();
+            String userPasswordString = userPassword.getText().toString().trim();
+
+            if (TextUtils.isEmpty(userEmailString) || TextUtils.isEmpty(userPasswordString))
+
+                Toast.makeText(mContext, "Empty!!", Toast.LENGTH_SHORT).show();
+
+            else {
+
+                OnFragmentInteractionListener data = (OnFragmentInteractionListener) mContext;
+                data.onUserRegistered(userEmailString, userPasswordString);
+            }
+        }
     }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        void onUserRegistered(String userEmail, String userPassword);
     }
 }

@@ -1,47 +1,61 @@
 package com.syntaxerror.tourmate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SignInFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SignInFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SignInFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+import java.util.Arrays;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
+
+public class SignInFragment extends Fragment implements View.OnClickListener {
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
+    private Context mContext;
+
     private OnFragmentInteractionListener mListener;
+
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+
+    private EditText userEmail;
+    private EditText userPassword;
+
+    private Button signInButton;
+
+    private OnFragmentInteractionListener data;
 
     public SignInFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SignInFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SignInFragment newInstance(String param1, String param2) {
         SignInFragment fragment = new SignInFragment();
         Bundle args = new Bundle();
@@ -53,56 +67,132 @@ public class SignInFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        getActivity().setTitle(R.string.login_title);
+
         if (getArguments() != null) {
+
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_in, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
+
+        userEmail = view.findViewById(R.id.signInUserName);
+        userPassword = view.findViewById(R.id.signInPassword);
+
+        signInButton = view.findViewById(R.id.signInButton);
+
+        signInButton.setOnClickListener(this);
+
+        FacebookSdk.sdkInitialize(getActivity());
+        AppEventsLogger.activateApp(mContext);
+
+        loginButton = view.findViewById(R.id.fbLoginButton);
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
+
+        callbackManager = CallbackManager.Factory.create();
+
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                data.isLoggedIn(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+
+                Toast.makeText(mContext, "Operation Canceled By User!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+
+                Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
+
         if (mListener != null) {
+
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
+
         super.onAttach(context);
+
         if (context instanceof OnFragmentInteractionListener) {
+
             mListener = (OnFragmentInteractionListener) context;
-        } else {
+        }
+
+        else {
+
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        mContext = context;
+        data = (OnFragmentInteractionListener) mContext;
     }
 
     @Override
     public void onDetach() {
+
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onClick(View v) {
+
+        if (v == signInButton) {
+
+            String userEmailString = userEmail.getText().toString().trim();
+            String userPasswordString = userPassword.getText().toString().trim();
+
+            if (TextUtils.isEmpty(userEmailString))
+
+                userEmail.setError("Email Can't Be Empty!");
+
+            else if (TextUtils.isEmpty(userPasswordString))
+
+                userPassword.setError("Password Can't Br Empty!");
+
+            else
+
+                data.isLoggedIn(userEmailString, userPasswordString);
+        }
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        void isLoggedIn(AccessToken accessToken);
+        void isLoggedIn(String userEmail, String userPassword);
     }
 }

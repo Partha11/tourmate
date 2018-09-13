@@ -7,7 +7,10 @@ public class SignedUpActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signed_up);
+
+        setTitle(R.string.signed_up_activity_title);
     }
 }
