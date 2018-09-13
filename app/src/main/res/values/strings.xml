@@ -8,4 +8,6 @@
     <string name="signed_up_activity_title">Home</string>
     <string name="login_title">Log In</string>
     <string name="register_title">Register</string>
+    <string name="no_account_message">Don\'t have an account?\n</string>
+    <string name="create_account">Create Account</string>
 </resources>

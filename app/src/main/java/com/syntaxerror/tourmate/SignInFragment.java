@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -48,9 +51,16 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     private EditText userEmail;
     private EditText userPassword;
 
+    private TextView createAccount;
+
     private Button signInButton;
 
     private OnFragmentInteractionListener data;
+
+    private RegisterFragment registerFragment;
+
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     public SignInFragment() {
         // Required empty public constructor
@@ -86,10 +96,16 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
         userEmail = view.findViewById(R.id.signInUserName);
         userPassword = view.findViewById(R.id.signInPassword);
+        createAccount = view.findViewById(R.id.createAccount);
 
         signInButton = view.findViewById(R.id.signInButton);
 
+        registerFragment = new RegisterFragment();
+
+        fragmentManager = getActivity().getSupportFragmentManager();
+
         signInButton.setOnClickListener(this);
+        createAccount.setOnClickListener(this);
 
         FacebookSdk.sdkInitialize(getActivity());
         AppEventsLogger.activateApp(mContext);
@@ -186,6 +202,15 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
             else
 
                 data.isLoggedIn(userEmailString, userPasswordString);
+        }
+
+        else if (v == createAccount) {
+
+            fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.fragmentLayout, registerFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
     }
 
