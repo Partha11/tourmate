@@ -3,7 +3,7 @@ package com.syntaxerror.tourmate;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class signedUpActivity extends AppCompatActivity {
+public class SignedUpActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
