@@ -13,20 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements RegisterFragment.OnFragmentInteractionListener,
-        SignInFragment.OnFragmentInteractionListener, View.OnClickListener {
+        SignInFragment.OnFragmentInteractionListener, HomePageFragment.OnFragmentInteractionListener {
 
-    private RelativeLayout frameLayout;
+    private FrameLayout frameLayout;
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
-    private SignInFragment signInFragment;
-    private RegisterFragment registerFragment;
-
-    private Button registerButton;
-    private Button signInButton;
-
-    private TextView homeLogo;
+    private HomePageFragment homePageFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,84 +28,27 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         setContentView(R.layout.activity_main);
 
         initFields();
+        loadHomeFragment();
     }
 
     private void initFields() {
 
-        registerButton = findViewById(R.id.register);
-        signInButton = findViewById(R.id.signIn);
-
-        homeLogo = findViewById(R.id.homeLogo);
-
         frameLayout = findViewById(R.id.fragmentLayout);
 
+        homePageFragment = new HomePageFragment();
+
         fragmentManager = getSupportFragmentManager();
-
-        registerButton.setOnClickListener(this);
-        signInButton.setOnClickListener(this);
+        fragmentTransaction = fragmentManager.beginTransaction();
     }
 
-    private void setFieldsInvisible() {
+    private void loadHomeFragment() {
 
-        homeLogo.setVisibility(View.GONE);
-        registerButton.setVisibility(View.GONE);
-        signInButton.setVisibility(View.GONE);
-        frameLayout.setVisibility(View.GONE);
-    }
-
-    private void setFieldsVisible() {
-
-        homeLogo.setVisibility(View.VISIBLE);
-        registerButton.setVisibility(View.VISIBLE);
-        signInButton.setVisibility(View.VISIBLE);
-        frameLayout.setVisibility(View.GONE);
+        fragmentTransaction.replace(R.id.fragmentLayout, homePageFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-
-            case R.id.register:
-
-                registerButtonClicked();
-                break;
-
-            case R.id.signIn:
-
-                signInButtonClicked();
-                break;
-        }
-    }
-
-    private void registerButtonClicked() {
-
-        registerFragment = new RegisterFragment();
-
-        setFieldsInvisible();
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentLayout, registerFragment);
-        fragmentTransaction.commit();
-
-        setFieldsInvisible();
-    }
-
-    private void signInButtonClicked() {
-
-        signInFragment = new SignInFragment();
-
-        setFieldsInvisible();
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentLayout, signInFragment);
-        fragmentTransaction.commit();
-
-        setFieldsVisible();
     }
 }

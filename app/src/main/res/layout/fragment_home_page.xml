@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomePageFragment">
+
+    <TextView
+        android:id="@+id/homeLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tour Mate"
+        android:textSize="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/homeLogo"
+        android:layout_centerHorizontal="true"
+        android:text="Register"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:layout_marginTop="20sp"/>
+
+    <Button
+        android:id="@+id/signIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register"
+        android:text="Sign In"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
