@@ -1,6 +1,7 @@
 package com.syntaxerror.tourmate;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
-    private HomePageFragment homePageFragment;
     private SignInFragment signInFragment;
 
     private FirebaseAuth mAuth;
@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     private ProgressBar progressBar;
 
     private DatabaseManager dbManager;
+
+    private boolean isNewUser;
+
+    private static final String PREF_NAME = "userdata";
+    private static final String PREF_KEY = "loggedIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +73,11 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                user = firebaseAuth.getCurrentUser();
+                user = mAuth.getCurrentUser();
 
-                if (user == null) {
+                if (!isNewUser) {
 
+                    Log.e("Prefs Data", String.valueOf(isNewUser));
                     loadHomeFragment();
                 }
 
@@ -86,22 +92,23 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     private void initFields() {
 
         frameLayout = findViewById(R.id.fragmentLayout);
-
-        homePageFragment = new HomePageFragment();
-        signInFragment = new SignInFragment();
-
         progressBar = findViewById(R.id.progressBar);
 
+        signInFragment = new SignInFragment();
         dbManager = new DatabaseManager(this);
 
         mAuth = FirebaseAuth.getInstance();
 
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        boolean defaultData = false;
+
+        isNewUser = prefs.getBoolean(PREF_KEY, defaultData);
     }
 
     private void loadHomeFragment() {
 
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentLayout, signInFragment);
         fragmentTransaction.commit();
     }
@@ -140,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 if (task.isSuccessful()) {
 
                     user = mAuth.getCurrentUser();
+
+                    updatePrefs(true);
                     switchActivity();
                 }
 
@@ -152,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void isLoggedIn(String userEmailOrName, String userPassword) {
+    public void userLogIn(String userEmailOrName, String userPassword) {
 
         String userEmail;
 
@@ -177,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                 if (task.isSuccessful()) {
 
+                    updatePrefs(true);
                     switchActivity();
                     finish();
                 }
@@ -209,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void onUserRegistered(final String userEmail, String userPassword) {
+    public void onUserRegistered(final String userEmail, final String userPassword) {
 
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
@@ -219,12 +229,18 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 if (task.isSuccessful()) {
 
                     Toast.makeText(MainActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                    switchActivity();
+                    updatePrefs(false);
                 }
 
                 else {
 
-                    Toast.makeText(MainActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                    if (userPassword.length() < 6)
+
+                        Toast.makeText(MainActivity.this, "Password Must Contain 6 Characters", Toast.LENGTH_SHORT).show();
+
+                    else
+
+                        Toast.makeText(MainActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
 
                     if (dbManager.deleteData(userEmail))
 
@@ -236,6 +252,17 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 }
             }
         });
+    }
+
+    private void updatePrefs(boolean isLoggedIn) {
+
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putBoolean(PREF_KEY, isLoggedIn);
+        editor.commit();
+
+        Log.e("Prefs Written: ", String.valueOf(isLoggedIn));
     }
 
     private void switchActivity() {

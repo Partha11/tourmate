@@ -2,6 +2,7 @@ package com.syntaxerror.tourmate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -201,7 +202,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
             else
 
-                data.isLoggedIn(userEmailString, userPasswordString);
+                data.userLogIn(userEmailString, userPasswordString);
         }
 
         else if (v == createAccount) {
@@ -218,6 +219,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
         void isLoggedIn(AccessToken accessToken);
-        void isLoggedIn(String userEmailOrName, String userPassword);
+        void userLogIn(String userEmailOrName, String userPassword);
     }
 }
