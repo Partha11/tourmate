@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
     private ProgressBar progressBar;
 
+    private DatabaseManager dbManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         signInFragment = new SignInFragment();
 
         progressBar = findViewById(R.id.progressBar);
+
+        dbManager = new DatabaseManager(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -148,7 +152,18 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void isLoggedIn(String userEmail, String userPassword) {
+    public void isLoggedIn(String userEmailOrName, String userPassword) {
+
+        String userEmail;
+
+        if (SingleUser.isEmail(userEmailOrName))
+
+            userEmail = userEmailOrName;
+
+        else {
+
+            userEmail = dbManager.getUserMail(userEmailOrName);
+        }
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -194,20 +209,31 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void onUserRegistered(String userEmail, String userPassword) {
+    public void onUserRegistered(final String userEmail, String userPassword) {
 
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                if (task.isSuccessful())
+                if (task.isSuccessful()) {
 
-                    Toast.makeText(MainActivity.this, "Registered!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                    switchActivity();
+                }
 
-                else
+                else {
 
-                    Toast.makeText(MainActivity.this, "Failed!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+
+                    if (dbManager.deleteData(userEmail))
+
+                        Log.e("Data Deletion", "successful");
+
+                    else
+
+                        Log.e("Data Deletion", "failed");
+                }
             }
         });
     }

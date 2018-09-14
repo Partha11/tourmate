@@ -5,12 +5,36 @@
     android:layout_height="match_parent"
     tools:context=".RegisterFragment">
 
-    <EditText
+    <ProgressBar
+        android:id="@+id/registerProgressBar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <LinearLayout
         android:id="@+id/registerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
-        android:textSize="20sp"/>
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/registerFirstName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="First Name"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/registerLastName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="Last Name"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/registerUserEmail"
@@ -26,30 +50,14 @@
         android:layout_height="wrap_content"
         android:hint="User Name"
         android:textSize="20sp"
-        android:layout_below="@+id/registerUserEmail"/>
+        android:layout_below="@+id/registerUserPassword"/>
 
     <EditText
         android:id="@+id/registerUserPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:layout_below="@id/registerUserName"
-        android:textSize="20sp"/>
-
-    <EditText
-        android:id="@+id/registerContactNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contact Number"
-        android:layout_below="@+id/registerUserPassword"
-        android:textSize="20sp"/>
-
-    <EditText
-        android:id="@+id/registerUserAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Address"
-        android:layout_below="@+id/registerContactNumber"
+        android:layout_below="@id/registerUserEmail"
         android:textSize="20sp"/>
 
     <Button
@@ -58,7 +66,7 @@
         android:layout_height="wrap_content"
         android:text="Register"
         android:textAllCaps="false"
-        android:layout_below="@+id/registerUserAddress"
+        android:layout_below="@+id/registerUserName"
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

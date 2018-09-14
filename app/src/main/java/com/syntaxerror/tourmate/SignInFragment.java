@@ -218,6 +218,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
         void isLoggedIn(AccessToken accessToken);
-        void isLoggedIn(String userEmail, String userPassword);
+        void isLoggedIn(String userEmailOrName, String userPassword);
     }
 }
