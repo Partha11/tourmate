@@ -38,7 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity implements RegisterFragment.OnFragmentInteractionListener,
-        SignInFragment.OnFragmentInteractionListener, HomePageFragment.OnFragmentInteractionListener {
+        SignInFragment.OnFragmentInteractionListener {
 
     private FrameLayout frameLayout;
 
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
     private void switchActivity() {
 
-        Intent intent = new Intent(MainActivity.this, SignedUpActivity.class);
+        Intent intent = new Intent(MainActivity.this, MainMenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
