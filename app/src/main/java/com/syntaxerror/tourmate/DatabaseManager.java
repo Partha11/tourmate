@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.syntaxerror.tourmate.pojos.SingleUser;
 
 public class DatabaseManager {
 

@@ -12,6 +12,7 @@
         android:text="NearBy Places"
         android:textAllCaps="false"/>
     <Button
+        android:id="@+id/addTravelEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Travel Event"

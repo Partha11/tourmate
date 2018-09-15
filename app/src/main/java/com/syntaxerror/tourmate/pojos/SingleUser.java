@@ -1,4 +1,4 @@
-package com.syntaxerror.tourmate;
+package com.syntaxerror.tourmate.pojos;
 
 import android.util.Patterns;
 
