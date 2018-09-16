@@ -11,37 +11,45 @@
         android:layout_height="wrap_content"
         android:text="NearBy Places"
         android:textAllCaps="false"/>
+
     <Button
         android:id="@+id/addTravelEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Travel Event"
         android:textAllCaps="false"/>
+
     <Button
+        android:id="@+id/viewTravelEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View all Travel Event"
         android:textAllCaps="false"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Travel Expense Tracker"
         android:textAllCaps="false"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Travel Expense Record"
         android:textAllCaps="false"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Travel Moment"
         android:textAllCaps="false"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Travel Moment"
         android:textAllCaps="false"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

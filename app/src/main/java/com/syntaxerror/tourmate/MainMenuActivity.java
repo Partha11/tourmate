@@ -17,15 +17,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import com.syntaxerror.tourmate.database.DatabaseManager;
+import com.syntaxerror.tourmate.pojos.Events;
+
+import java.util.List;
 
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainMenuContentsFragment.OnFragmentInteractionListener,
-        AddEventFragment.OnFragmentInteractionListener {
+        AddEventFragment.OnFragmentInteractionListener, ViewEventsFragment.OnFragmentInteractionListener {
 
     private FrameLayout fragmentLayout;
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+
+    private DatabaseManager dbManager;
 
     private MainMenuContentsFragment mainMenu;
 
@@ -124,6 +132,7 @@ public class MainMenuActivity extends AppCompatActivity
 
         fragmentLayout = findViewById(R.id.mainMenuFragment);
         mainMenu = new MainMenuContentsFragment();
+        dbManager = new DatabaseManager(MainMenuActivity.this);
     }
 
     private void loadMainMenu() {
@@ -138,5 +147,25 @@ public class MainMenuActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public List<Events> getAllEvents() {
+
+        List<Events> eventsList = dbManager.getAllEventsData();
+
+        return eventsList;
+    }
+
+    @Override
+    public void addEventDetails(Events event) {
+
+        if (dbManager.insertEventData(event))
+
+            Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
+
+        else
+
+            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
     }
 }

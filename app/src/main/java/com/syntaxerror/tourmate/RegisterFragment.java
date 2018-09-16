@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.syntaxerror.tourmate.database.DatabaseManager;
 import com.syntaxerror.tourmate.pojos.SingleUser;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {

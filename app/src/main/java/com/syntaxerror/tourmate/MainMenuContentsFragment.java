@@ -30,8 +30,10 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
     private FragmentManager fragmentManager;
 
     private Button addEventButton;
+    private Button viewEventButton;
 
     private AddEventFragment addEvent;
+    private ViewEventsFragment viewEvents;
 
     public MainMenuContentsFragment() {
         // Required empty public constructor
@@ -67,8 +69,10 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
 
         fragmentLayout = view.findViewById(R.id.mainMenuFragment);
         addEventButton = view.findViewById(R.id.addTravelEvent);
+        viewEventButton = view.findViewById(R.id.viewTravelEvents);
 
         addEventButton.setOnClickListener(this);
+        viewEventButton.setOnClickListener(this);
 
         return view;
     }
@@ -110,6 +114,8 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
     private void initFields() {
 
         addEvent = new AddEventFragment();
+        viewEvents = new ViewEventsFragment();
+
         fragmentManager = getActivity().getSupportFragmentManager();
     }
 
@@ -122,6 +128,11 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
 
                 addTravelEventClicked();
                 break;
+
+            case R.id.viewTravelEvents:
+
+                viewTravelEventsClicked();
+                break;
         }
     }
 
@@ -130,6 +141,15 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
         fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.mainMenuFragment, addEvent);
+        fragmentTransaction.commit();
+    }
+
+    private void viewTravelEventsClicked() {
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.mainMenuFragment, viewEvents);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

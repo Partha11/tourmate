@@ -8,6 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.syntaxerror.tourmate.adapters.EventAdapter;
+import com.syntaxerror.tourmate.pojos.Events;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewEventsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -22,8 +29,9 @@ public class ViewEventsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private Context mContext;
-
     private ListView mListView;
+    private EventAdapter eventAdapter;
+    private List<Events> eventsList;
 
     public ViewEventsFragment() {
         // Required empty public constructor
@@ -53,6 +61,19 @@ public class ViewEventsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_events, container, false);
 
         mListView = view.findViewById(R.id.viewEventsList);
+
+        eventsList = mListener.getAllEvents();
+
+        if (eventsList == null)
+
+            Toast.makeText(mContext, "No events to display", Toast.LENGTH_SHORT).show();
+
+        else {
+
+            eventAdapter = new EventAdapter(mContext, R.layout.view_event_model, eventsList);
+
+            mListView.setAdapter(eventAdapter);
+        }
 
         return view;
     }
@@ -93,5 +114,6 @@ public class ViewEventsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        List<Events> getAllEvents();
     }
 }

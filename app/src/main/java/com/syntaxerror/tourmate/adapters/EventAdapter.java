@@ -38,10 +38,8 @@ public class EventAdapter extends ArrayAdapter<Events> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        convertView = super.getView(position, convertView, parent);
         LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        inflater.inflate(mResource, parent, false);
+        convertView = inflater.inflate(mResource, parent, false);
 
         eventTitle = convertView.findViewById(R.id.eventTitle);
         fromDate = convertView.findViewById(R.id.eventFromDate);

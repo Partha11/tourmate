@@ -6,13 +6,13 @@
     tools:context=".AddEventFragment"
     android:padding="10dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <EditText
         android:id="@+id/travelDestination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Travel Destination"/>
+        android:hint="Travel Destination"
         android:layout_marginBottom="20dp"/>
+
     <EditText
         android:id="@+id/estimatedBudget"
         android:layout_width="match_parent"
@@ -20,6 +20,7 @@
         android:layout_below="@id/travelDestination"
         android:hint="Estimated Budget"
         android:layout_marginBottom="20dp"/>
+
     <EditText
         android:id="@+id/fromDate"
         android:layout_below="@id/estimatedBudget"
@@ -45,7 +46,5 @@
         android:text="Create Event"
         android:layout_below="@id/toDate"
         android:textAllCaps="false" />
-
-
 
 </RelativeLayout>

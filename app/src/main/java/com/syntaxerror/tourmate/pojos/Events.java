@@ -7,6 +7,10 @@ public class Events {
     private String fromDate;
     private String toDate;
 
+    public Events() {
+
+    }
+
     public Events(String travelDescription, String estimatedBudget, String fromDate, String toDate) {
 
         this.travelDescription = travelDescription;
