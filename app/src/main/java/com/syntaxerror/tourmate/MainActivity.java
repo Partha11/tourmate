@@ -24,8 +24,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.syntaxerror.tourmate.database.DatabaseManager;
+import com.syntaxerror.tourmate.pojos.FullName;
 import com.syntaxerror.tourmate.pojos.SingleUser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RegisterFragment.OnFragmentInteractionListener,
         SignInFragment.OnFragmentInteractionListener {
@@ -39,14 +49,19 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
     private FirebaseUser user;
+    private DatabaseReference dbReference;
 
     private ProgressBar progressBar;
 
     private DatabaseManager dbManager;
 
+    private List<SingleUser> userList;
+    private HashMap<Integer, SingleUser> userListMap;
+
+    private static int id;
     private boolean isNewUser;
+    private static boolean isSuccessful;
 
     private static final String PREF_NAME = "userdata";
     private static final String PREF_KEY = "loggedIn";
@@ -88,6 +103,31 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         dbManager = new DatabaseManager(this);
 
         mAuth = FirebaseAuth.getInstance();
+        dbReference = FirebaseDatabase.getInstance().getReference();
+
+        userList = new ArrayList<>();
+        userListMap = new HashMap<>();
+
+        dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot i : dataSnapshot.getChildren()) {
+
+                    userList.add(i.getValue(SingleUser.class));
+                    userListMap.put(userListMap.size() , i.getValue(SingleUser.class));
+                }
+
+                id = userListMap.size();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Toast.makeText(MainActivity.this, "Failed To Fetch", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         boolean defaultData = false;
@@ -250,6 +290,52 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onUserRegistered(SingleUser singleUser) {
+
+        boolean isDataUnique;
+
+        if (userListMap.containsValue(singleUser))
+
+            isDataUnique = false;
+
+        else
+
+            isDataUnique = true;
+
+        if (!isDataUnique) {
+
+            Toast.makeText(this, "Email or Username Exists", Toast.LENGTH_SHORT).show();
+
+            loadHomeFragment();
+            return false;
+        }
+
+        dbReference.child(String.valueOf(++id)).setValue(singleUser)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful())
+
+                    isSuccessful = true;
+
+                else
+
+                    isSuccessful = false;
+            }
+        });
+
+        if (isSuccessful)
+
+            return true;
+
+        else
+
+            return false;
     }
 
     private void updatePrefs(boolean isLoggedIn) {

@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.syntaxerror.tourmate.database.DatabaseManager;
+import com.syntaxerror.tourmate.pojos.FullName;
 import com.syntaxerror.tourmate.pojos.SingleUser;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {
@@ -128,17 +129,18 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
         if (v == registerButton) {
 
-            String userFullNameString = firstName.getText().toString().trim() + lastName.getText().toString().trim();
+            String userFirstNameString = firstName.getText().toString().trim();
+            String userLastNameString = lastName.getText().toString().trim();
             String userEmailString = userEmail.getText().toString().trim();
             String userPasswordString = userPassword.getText().toString().trim();
             String userNameString = userName.getText().toString().trim();
 
             progressBar.setVisibility(View.GONE);
 
-            if (TextUtils.isEmpty(userEmailString) || TextUtils.isEmpty(userPasswordString) ||
+/*            if (TextUtils.isEmpty(userEmailString) || TextUtils.isEmpty(userPasswordString) ||
                     TextUtils.isEmpty(userFullNameString) || TextUtils.isEmpty(userNameString))
 
-                Toast.makeText(mContext, "Fields Can Not Contain Empty Fields!", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Fields Can Not Be Empty!", Toast.LENGTH_LONG).show();
 
             else {
 
@@ -157,6 +159,18 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
                     Toast.makeText(mContext, "Email or Username Already Exists!", Toast.LENGTH_SHORT).show();
                 }
+            }*/
+
+            SingleUser singleUser = new SingleUser(userEmailString, userNameString, new FullName(userFirstNameString, userLastNameString));
+
+            if (mListener.onUserRegistered(singleUser)) {
+
+                mListener.onUserRegistered(userEmailString, userPasswordString);
+            }
+
+            else {
+
+                Toast.makeText(mContext, "An error occurred", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -186,5 +200,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
         void onUserRegistered(String userEmail, String userPassword);
+        boolean onUserRegistered(SingleUser singleUser);
     }
 }

@@ -7,16 +7,19 @@ import java.util.regex.Pattern;
 
 public class SingleUser {
 
-    private int id;
-
     private String userMail;
     private String userName;
+    private FullName fullName;
 
-    public SingleUser(int id, String userMail, String userName) {
+    public SingleUser() {
 
-        this.id = id;
+    }
+
+    public SingleUser(String userMail, String userName, FullName fullName) {
+
         this.userMail = userMail;
         this.userName = userName;
+        this.fullName = fullName;
     }
 
     public SingleUser(String userMail, String userName) {
@@ -28,6 +31,11 @@ public class SingleUser {
     public SingleUser(String userMail) {
 
         this.userMail = userMail;
+    }
+
+    public FullName getFullName() {
+
+        return fullName;
     }
 
     public String getUserMail() {
@@ -70,5 +78,27 @@ public class SingleUser {
         Matcher matcher = Patterns.EMAIL_ADDRESS.matcher(userMail);
 
         return matcher.matches();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null)
+
+            return false;
+
+        if (!(obj instanceof SingleUser))
+
+            return false;
+
+        SingleUser user = (SingleUser) obj;
+
+        if (user.userMail.equals(this.userMail) || user.userName.equals(this.userName))
+
+            return true;
+
+        else
+
+            return false;
     }
 }
