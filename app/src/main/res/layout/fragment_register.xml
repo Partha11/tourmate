@@ -1,72 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterFragment">
+    android:background="#00b0ff">
 
-    <ProgressBar
-        android:id="@+id/registerProgressBar"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
-
-    <LinearLayout
-        android:id="@+id/registerName"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="495dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="64dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="64dp"
 
-        <EditText
-            android:id="@+id/registerFirstName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:hint="First Name"
-            android:textSize="20sp"/>
+        >
 
-        <EditText
-            android:id="@+id/registerLastName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:hint="Last Name"
-            android:textSize="20sp"/>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".RegisterFragment"
+            android:gravity="center">
 
-    </LinearLayout>
+            <ProgressBar
+                android:id="@+id/registerProgressBar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/registerUserEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="User Email"
-        android:textSize="20sp"
-        android:layout_below="@+id/registerName"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/registerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/registerUserName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="User Name"
-        android:textSize="20sp"
-        android:layout_below="@+id/registerUserPassword"/>
+                    <EditText
+                        android:id="@+id/registerFirstName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:hint=" First Name"
+                        android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/registerUserPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:layout_below="@id/registerUserEmail"
-        android:textSize="20sp"/>
+                    <EditText
+                        android:id="@+id/registerLastName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:hint=" Last Name"
+                        android:textSize="20sp"/>
 
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:textAllCaps="false"
-        android:layout_below="@+id/registerUserName"
-        android:layout_centerHorizontal="true"/>
+                </LinearLayout>
 
+                <EditText
+                    android:id="@+id/registerUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/registerButton"
+                    android:layout_alignParentStart="true"
+                    android:hint=" User Name"
+                    android:drawableLeft="@drawable/user"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/registerUserEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=" User Email"
+                    android:textSize="20sp"
+                    android:layout_below="@+id/registerName"
+                    android:drawableLeft="@drawable/email"/>
+
+                <EditText
+                    android:id="@+id/registerUserPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/registerUserEmail"
+                    android:hint=" Password"
+                    android:textSize="20sp"
+                    android:drawableLeft="@drawable/password"/>
+
+
+                <Button
+                    android:id="@+id/registerButton"
+                    android:layout_width="match_parent"
+                    android:background="#1de9b6"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="Register"
+                    android:textSize="20sp"
+                    android:textColor="#FFFF"
+                    android:layout_gravity="center"
+                    android:textAllCaps="false"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>
