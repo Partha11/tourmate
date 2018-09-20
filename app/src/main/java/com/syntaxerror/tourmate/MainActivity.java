@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -61,10 +62,13 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
     private static int id;
     private boolean isNewUser;
+    private String userName;
     private static boolean isSuccessful;
 
-    private static final String PREF_NAME = "userdata";
     private static final String PREF_KEY = "loggedIn";
+    private static final String PREF_USER_NAME = "username";
+    private static final String PREF_USER_MAIL = "usermail";
+    private static final String PREF_USER_ID = "userId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                 user = mAuth.getCurrentUser();
 
-                if (!isNewUser) {
+                if (user != null) {
 
                     Log.e("Prefs Data", String.valueOf(isNewUser));
                     loadHomeFragment();
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                 else {
 
+                    finish();
                     switchActivity();
                 }
             }
@@ -130,9 +135,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         });
 
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        boolean defaultData = false;
-
-        isNewUser = prefs.getBoolean(PREF_KEY, defaultData);
+        isNewUser = prefs.getBoolean(PREF_KEY, false);
     }
 
     private void loadHomeFragment() {
@@ -178,7 +181,10 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                     user = mAuth.getCurrentUser();
 
-                    updatePrefs(true);
+                    if (user != null)
+
+                        updatePrefs(user);
+
                     switchActivity();
                 }
 
@@ -210,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         else {
 
             userEmail = dbManager.getUserMail(userEmailOrName);
+            userName = userEmailOrName;
         }
 
         progressBar.setVisibility(View.VISIBLE);
@@ -224,15 +231,21 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                 if (task.isSuccessful()) {
 
-                    updatePrefs(true);
-                    switchActivity();
                     finish();
+                    switchActivity();
                 }
 
                 else {
 
                     Toast.makeText(MainActivity.this, "Wrong Email or Password", Toast.LENGTH_SHORT).show();
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Log.e("Error", e.getLocalizedMessage());
             }
         });
     }
@@ -267,7 +280,12 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 if (task.isSuccessful()) {
 
                     Toast.makeText(MainActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                    updatePrefs(false);
+
+                    user = mAuth.getCurrentUser();
+
+                    if (user != null)
+
+                        updatePrefs(user);
                 }
 
                 else {
@@ -288,6 +306,13 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                         Log.e("Data Deletion", "failed");
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Log.e("Error", e.getLocalizedMessage());
             }
         });
     }
@@ -327,15 +352,16 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                     isSuccessful = false;
             }
+        }).addOnFailureListener(new OnFailureListener() {
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Log.e("Error", e.getLocalizedMessage());
+            }
         });
 
-        if (isSuccessful)
-
-            return true;
-
-        else
-
-            return false;
+        return isSuccessful;
     }
 
     private void updatePrefs(boolean isLoggedIn) {
@@ -347,6 +373,26 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         editor.commit();
 
         Log.e("Prefs Written: ", String.valueOf(isLoggedIn));
+    }
+
+    private void updatePrefs(FirebaseUser user) {
+
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        if (user.getDisplayName() != null)
+
+            editor.putString(PREF_USER_NAME, user.getDisplayName());
+
+        else
+
+            editor.putString(PREF_USER_NAME, userName);
+
+        editor.putString(PREF_USER_ID, user.getUid());
+        editor.putString(PREF_USER_MAIL, user.getEmail());
+        editor.commit();
+
+        Log.e("Message", "Write To Prefs Complete " + user.getDisplayName() + " " + user.getEmail());
     }
 
     private void switchActivity() {
