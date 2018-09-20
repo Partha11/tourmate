@@ -1,32 +1,52 @@
 package com.syntaxerror.tourmate;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.syntaxerror.tourmate.database.DatabaseManager;
+import com.syntaxerror.tourmate.pojos.ApiClient;
+import com.syntaxerror.tourmate.pojos.ApiInterface;
 import com.syntaxerror.tourmate.pojos.Events;
+import com.syntaxerror.tourmate.pojos.Nearby;
+import com.syntaxerror.tourmate.pojos.NearbyPlaces;
+import com.syntaxerror.tourmate.pojos.Result;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainMenuContentsFragment.OnFragmentInteractionListener,
-        AddEventFragment.OnFragmentInteractionListener, ViewEventsFragment.OnFragmentInteractionListener {
+        AddEventFragment.OnFragmentInteractionListener, ViewEventsFragment.OnFragmentInteractionListener,
+        NearbyPlacesFragment.OnFragmentInteractionListener, DisplayNearbyPlacesFragment.OnFragmentInteractionListener {
+
+    public static final int LOCATION_PERMISSION = 1;
 
     private FrameLayout fragmentLayout;
 
@@ -36,6 +56,15 @@ public class MainMenuActivity extends AppCompatActivity
     private DatabaseManager dbManager;
 
     private MainMenuContentsFragment mainMenu;
+
+    private PlaceDetectionClient placeDetectionClient;
+    private LatLng latLng;
+    private String latLngString;
+
+    private List<Result> results;
+    private List<NearbyPlaces> nearbyPlacesList;
+
+    private ApiInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +162,12 @@ public class MainMenuActivity extends AppCompatActivity
         fragmentLayout = findViewById(R.id.mainMenuFragment);
         mainMenu = new MainMenuContentsFragment();
         dbManager = new DatabaseManager(MainMenuActivity.this);
+
+        if (checkLocationPermission()) {
+
+            placeDetectionClient = com.google.android.gms.location.places.Places.getPlaceDetectionClient(this, null);
+            fetchLocation();
+        }
     }
 
     private void loadMainMenu() {
@@ -144,9 +179,161 @@ public class MainMenuActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
+    public boolean checkLocationPermission() {
+
+        if (ContextCompat.checkSelfPermission(MainMenuActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(MainMenuActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION);
+
+            return false;
+        }
+
+        else
+
+            return true;
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+
+        int result = googleAPI.isGooglePlayServicesAvailable(this);
+
+        if(result != ConnectionResult.SUCCESS) {
+
+            if(googleAPI.isUserResolvableError(result)) {
+
+                googleAPI.getErrorDialog(this, result, 0).show();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private void fetchLocation() {
+
+        SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
+
+            @Override
+            public void onLocationUpdated(android.location.Location location) {
+
+                latLngString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+        });
+    }
+
+/*    private void fetchDistance(final Places.CustomA info) {
+
+        Call<DistanceLine.ResultDistanceMatrix> call = apiInterface.getDistance(ApiClient.GOOGLE_PLACE_API_KEY,
+                latLngString, info.geometry.locationA.lat + "," + info.geometry.locationA.lng);
+
+        call.enqueue(new Callback<DistanceLine.ResultDistanceMatrix>() {
+
+            @Override
+            public void onResponse(Call<DistanceLine.ResultDistanceMatrix> call, Response<DistanceLine.ResultDistanceMatrix> response) {
+
+                DistanceLine.ResultDistanceMatrix resultDistance = response.body();
+
+                if ("OK".equalsIgnoreCase(resultDistance.status)) {
+
+                    DistanceLine.ResultDistanceMatrix.InfoDistanceMatrix infoDistanceMatrix =
+                            (DistanceLine.ResultDistanceMatrix.InfoDistanceMatrix) resultDistance.rows.get(0);
+
+                    DistanceLine.ResultDistanceMatrix.InfoDistanceMatrix.DistanceElement distanceElement =
+                            (DistanceLine.ResultDistanceMatrix.InfoDistanceMatrix.DistanceElement) infoDistanceMatrix.elements.get(0);
+
+                    if ("OK".equalsIgnoreCase(distanceElement.status)) {
+
+                        DistanceLine.ResultDistanceMatrix.InfoDistanceMatrix.ValueItem itemDuration = distanceElement.duration;
+                        DistanceLine.ResultDistanceMatrix.InfoDistanceMatrix.ValueItem itemDistance = distanceElement.distance;
+
+                        String totalDistance = String.valueOf(itemDistance.text);
+                        String totalDuration = String.valueOf(itemDuration.text);
+
+                        nearbyPlacesList.add(new NearbyPlaces(info.name, info.vicinity, totalDistance));
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<DistanceLine.ResultDistanceMatrix> call, Throwable t) {
+
+                Log.e("Error", t.getLocalizedMessage());
+            }
+        });
+    }*/
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public List<NearbyPlaces> findNearByPlaces(String placeName) {
+
+        fetchLocation();
+
+        Log.e("Error", "Location- " + latLngString);
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<Nearby> call = apiInterface.searchPlaces(latLngString, placeName, "true", "distance",
+                ApiClient.GOOGLE_PLACE_API_KEY);
+
+        call.enqueue(new Callback<Nearby>() {
+
+            @Override
+            public void onResponse(Call<Nearby> call, Response<Nearby> response) {
+
+                Nearby nearbyPlace = response.body();
+
+                Log.e("Info", nearbyPlace.getStatus());
+
+                if (nearbyPlace.getStatus() != null) {
+
+                    if (nearbyPlace.getStatus().equals("OK")) {
+
+                        results = nearbyPlace.getResults();
+                        nearbyPlacesList = new ArrayList<>();
+
+                        for (int i = 0; i < results.size(); i++) {
+
+                            if (i >= 20)
+
+                                break;
+
+                            nearbyPlacesList.add(new NearbyPlaces(nearbyPlace.getResults().get(i).getName(),
+                                    nearbyPlace.getResults().get(i).getVicinity()));
+                        }
+                    }
+
+                    else {
+
+                        Toast.makeText(getApplicationContext(), "No matches found near you", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                else if (response.code() != 200) {
+
+                    Toast.makeText(getApplicationContext(), "Error " + response.code() + " found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Nearby> call, Throwable t) {
+                // Log error here since request failed
+                Log.e("Error", t.getLocalizedMessage());
+            }
+        });
+
+        return nearbyPlacesList;
     }
 
     @Override

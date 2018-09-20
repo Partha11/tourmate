@@ -13,46 +13,10 @@
         android:textSize="20sp"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/nearbyCafe"
+    <ListView
+        android:id="@+id/nearbyPlacesListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cafe"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginTop="30sp"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_height="match_parent"
         android:layout_below="@+id/nearbyPlacesText" />
-
-    <TextView
-        android:id="@+id/nearbyRestaurant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Restaurants"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginTop="10sp"
-        android:layout_below="@+id/nearbyCafe" />
-
-    <TextView
-        android:id="@+id/nearbyAtm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ATM"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginTop="10sp"
-        android:layout_below="@+id/nearbyRestaurant" />
-
-    <TextView
-        android:id="@+id/nearbyBanks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Bank"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginTop="10sp"
-        android:layout_below="@+id/nearbyAtm" />
 
 </RelativeLayout>

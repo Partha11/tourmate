@@ -31,9 +31,11 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
 
     private Button addEventButton;
     private Button viewEventButton;
+    private Button nearbyPlaces;
 
     private AddEventFragment addEvent;
     private ViewEventsFragment viewEvents;
+    private NearbyPlacesFragment nearbyPlacesFragment;
 
     public MainMenuContentsFragment() {
         // Required empty public constructor
@@ -70,9 +72,11 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
         fragmentLayout = view.findViewById(R.id.mainMenuFragment);
         addEventButton = view.findViewById(R.id.addTravelEvent);
         viewEventButton = view.findViewById(R.id.viewTravelEvents);
+        nearbyPlaces = view.findViewById(R.id.nearbyPlaces);
 
         addEventButton.setOnClickListener(this);
         viewEventButton.setOnClickListener(this);
+        nearbyPlaces.setOnClickListener(this);
 
         return view;
     }
@@ -115,6 +119,7 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
 
         addEvent = new AddEventFragment();
         viewEvents = new ViewEventsFragment();
+        nearbyPlacesFragment = new NearbyPlacesFragment();
 
         fragmentManager = getActivity().getSupportFragmentManager();
     }
@@ -133,6 +138,11 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
 
                 viewTravelEventsClicked();
                 break;
+
+            case R.id.nearbyPlaces:
+
+                nearbyPlacesClicked();
+                break;
         }
     }
 
@@ -149,6 +159,15 @@ public class MainMenuContentsFragment extends Fragment implements View.OnClickLi
         fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.mainMenuFragment, viewEvents);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void nearbyPlacesClicked() {
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.mainMenuFragment, nearbyPlacesFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

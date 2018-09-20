@@ -4,22 +4,20 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.syntaxerror.tourmate.adapters.NearbyPlacesAdapter;
 import com.syntaxerror.tourmate.pojos.NearbyPlaceData;
 import com.syntaxerror.tourmate.pojos.NearbyPlaces;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NearbyPlacesFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class DisplayNearbyPlacesFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -32,24 +30,16 @@ public class NearbyPlacesFragment extends Fragment implements AdapterView.OnItem
     private Context mContext;
 
     private ListView mListView;
+    private NearbyPlacesAdapter nearbyPlacesAdapter;
 
-    private List<String> placesList;
     private List<NearbyPlaces> nearbyPlacesList;
 
-    private ArrayAdapter<String> placesAdapter;
-
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
-
-    private DisplayNearbyPlacesFragment displayNearbyPlacesFragment;
-
-    public NearbyPlacesFragment() {
+    public DisplayNearbyPlacesFragment() {
         // Required empty public constructor
     }
 
-    public static NearbyPlacesFragment newInstance(String param1, String param2) {
-
-        NearbyPlacesFragment fragment = new NearbyPlacesFragment();
+    public static DisplayNearbyPlacesFragment newInstance(String param1, String param2) {
+        DisplayNearbyPlacesFragment fragment = new DisplayNearbyPlacesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,11 +49,8 @@ public class NearbyPlacesFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
-
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -72,16 +59,19 @@ public class NearbyPlacesFragment extends Fragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_nearby_places, container, false);
+        View view = inflater.inflate(R.layout.fragment_display_nearby_places, container, false);
 
-        initFields();
+        mListView = view.findViewById(R.id.nearbyPlacesCategorized);
 
-        mListView = view.findViewById(R.id.nearbyPlacesListView);
+        nearbyPlacesList = NearbyPlaceData.nearbyPlaces;
 
-        fragmentManager = getActivity().getSupportFragmentManager();
+        if (nearbyPlacesList != null) {
 
-        mListView.setAdapter(placesAdapter);
-        mListView.setOnItemClickListener(this);
+            Log.e("Places", nearbyPlacesList.toString());
+
+            nearbyPlacesAdapter = new NearbyPlacesAdapter(mContext, R.layout.view_nearbyplaces_model, nearbyPlacesList);
+            mListView.setAdapter(nearbyPlacesAdapter);
+        }
 
         return view;
     }
@@ -119,45 +109,8 @@ public class NearbyPlacesFragment extends Fragment implements AdapterView.OnItem
         mListener = null;
     }
 
-    private void initFields() {
-
-        placesList = new ArrayList<>();
-        displayNearbyPlacesFragment = new DisplayNearbyPlacesFragment();
-
-        placesList.add("Cafe");
-        placesList.add("Restaurant");
-        placesList.add("ATM");
-        placesList.add("Bank");
-        placesList.add("Mosque");
-
-        placesAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, placesList);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        switch (position) {
-
-            case 0:
-
-                NearbyPlaceData.nearbyPlaces = mListener.findNearByPlaces("cafe");
-                switchFragment();
-                break;
-        }
-    }
-
-    private void switchFragment() {
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.mainMenuFragment, displayNearbyPlacesFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        List<NearbyPlaces> findNearByPlaces(String placeName);
     }
 }
