@@ -143,6 +143,30 @@ public class NearbyPlacesFragment extends Fragment implements AdapterView.OnItem
                 NearbyPlaceData.nearbyPlaces = mListener.findNearByPlaces("cafe");
                 switchFragment();
                 break;
+
+            case 1:
+
+                NearbyPlaceData.nearbyPlaces = mListener.findNearByPlaces("restaurant");
+                switchFragment();
+                break;
+
+            case 2:
+
+                NearbyPlaceData.nearbyPlaces = mListener.findNearByPlaces("atm");
+                switchFragment();
+                break;
+
+            case 3:
+
+                NearbyPlaceData.nearbyPlaces = mListener.findNearByPlaces("bank");
+                switchFragment();
+                break;
+
+            case 4:
+
+                NearbyPlaceData.nearbyPlaces = mListener.findNearByPlaces("mosque");
+                switchFragment();
+                break;
         }
     }
 
@@ -150,7 +174,7 @@ public class NearbyPlacesFragment extends Fragment implements AdapterView.OnItem
 
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.mainMenuFragment, displayNearbyPlacesFragment);
+        fragmentTransaction.replace(R.id.updatedFragmentLayout, displayNearbyPlacesFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
