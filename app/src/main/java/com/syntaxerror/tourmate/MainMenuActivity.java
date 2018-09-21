@@ -340,7 +340,6 @@ public class MainMenuActivity extends AppCompatActivity
     public List<Events> getAllEvents() {
 
         List<Events> eventsList = dbManager.getAllEventsData();
-
         return eventsList;
     }
 

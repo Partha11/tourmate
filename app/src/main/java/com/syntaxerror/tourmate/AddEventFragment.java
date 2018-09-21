@@ -59,6 +59,8 @@ public class AddEventFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_add_event, container, false);
 
+        getActivity().setTitle("Add Event");
+
         travelDescription = view.findViewById(R.id.travelDestination);
         travelFromDate = view.findViewById(R.id.fromDate);
         travelToDate = view.findViewById(R.id.toDate);

@@ -52,6 +52,7 @@ public class DatabaseManager {
 
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put(DatabaseHelper.EVENT_KEY_ID, event.getEventId());
         contentValues.put(DatabaseHelper.EVENT_KEY_DETAILS, event.getTravelDescription());
         contentValues.put(DatabaseHelper.EVENT_KEY_FROM_DATE, event.getFromDate());
         contentValues.put(DatabaseHelper.EVENT_KEY_TO_DATE, event.getToDate());
@@ -88,12 +89,13 @@ public class DatabaseManager {
 
             while (cursor.moveToNext()) {
 
+                String mTravelId = cursor.getString(cursor.getColumnIndex(DatabaseHelper.EVENT_KEY_ID));
                 String mTravelDescription = cursor.getString(cursor.getColumnIndex(DatabaseHelper.EVENT_KEY_DETAILS));
                 String mTravelEstBudget = cursor.getString(cursor.getColumnIndex(DatabaseHelper.EVENT_KEY_BUDGET));
                 String mTravelFromDate = cursor.getString(cursor.getColumnIndex(DatabaseHelper.EVENT_KEY_FROM_DATE));
                 String mTravelToDate = cursor.getString(cursor.getColumnIndex(DatabaseHelper.EVENT_KEY_TO_DATE));
 
-                event = new Events(mTravelDescription, mTravelEstBudget, mTravelFromDate, mTravelToDate);
+                event = new Events(mTravelId, mTravelDescription, mTravelEstBudget, mTravelFromDate, mTravelToDate);
                 eventsList.add(event);
             }
         }

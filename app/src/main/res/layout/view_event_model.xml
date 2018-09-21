@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="Event Title"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="From"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_below="@+id/eventTitle"
         android:layout_marginLeft="10dp"/>
 
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1.1.2018"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_below="@+id/eventFromDateFixed"
         android:layout_marginLeft="10dp"/>
 
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="To"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/eventTitle"
         android:layout_marginRight="10dp"/>
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="10.1.2018"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/eventToDateFixed"
         android:layout_marginRight="10dp"/>

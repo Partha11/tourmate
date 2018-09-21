@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION = 2;
+    public static final int DB_VERSION = 3;
 
     public static final String DB_NAME = "user_data";
     public static final String TABLE_NAME = "mails";
@@ -21,7 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String EVENT_KEY_BUDGET = "event_budget";
 
     private static String userdataQuery = "CREATE TABLE " + TABLE_NAME + "(" + KEY_MAIL + " TEXT PRIMARY KEY, " + KEY_NAME + " TEXT)";
-    private static String eventQuery = "CREATE TABLE " + EVENT_TABLE_NAME + "(" + EVENT_KEY_ID + " INT PRIMARY KEY, "
+    private static String eventQuery = "CREATE TABLE " + EVENT_TABLE_NAME + "(" + EVENT_KEY_ID + " TEXT PRIMARY KEY, "
             + EVENT_KEY_DETAILS + " TEXT, " + EVENT_KEY_FROM_DATE + " TEXT, " + EVENT_KEY_TO_DATE + " TEXT, " +
             EVENT_KEY_BUDGET + " TEXT)";
 

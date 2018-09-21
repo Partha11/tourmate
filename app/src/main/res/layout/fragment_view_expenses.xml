@@ -4,29 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ViewEventsFragment">
+    tools:context=".ViewExpensesFragment">
 
-    <EditText
-        android:id="@+id/searchEvent"
+    <Spinner
+        android:id="@+id/expenseSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search Events"
-        android:textSize="25sp"
-        android:textColorHint="@color/colorGray"
-        android:drawableRight="@drawable/ic_search"
-        android:paddingRight="10sp"
-        android:paddingLeft="20sp"
-        android:background="@drawable/search_bar_mod"
-        android:layout_margin="20sp"/>
+        android:layout_height="wrap_content" />
 
     <ListView
-        android:id="@+id/viewEventsList"
+        android:id="@+id/viewExpensesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/searchEvent"/>
+        android:layout_below="@+id/expenseSpinner" />
 
     <io.github.kobakei.materialfabspeeddial.FabSpeedDial
-        android:id="@+id/fabEvents"
+        android:id="@+id/fabExpense"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="45dp"

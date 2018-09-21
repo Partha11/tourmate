@@ -13,8 +13,8 @@ public interface ApiInterface {
                                     @Query("rankby") String rankby,
                                     @Query("key") String key);
 
-    @GET("distancematrix/json")
+    /*@GET("distancematrix/json")
     Call<DistanceLine.ResultDistanceMatrix> getDistance (@Query("key") String key,
                                                          @Query("origins") String origins,
-                                                         @Query("destinations") String destinations);
+                                                         @Query("destinations") String destinations);*/
 }
