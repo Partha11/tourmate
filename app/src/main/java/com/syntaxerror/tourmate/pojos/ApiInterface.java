@@ -7,10 +7,16 @@ import retrofit2.http.Query;
 public interface ApiInterface {
 
     @GET("place/nearbysearch/json?")
+    Call<Nearby> getNearbyPlaces(@Query("type") String type,
+                                 @Query("location") String location,
+                                 @Query("radius") int radius,
+                                 @Query("key") String key);
+
+    @GET("place/nearbysearch/json?")
     Call<Nearby> searchPlaces (@Query("location") String location,
                                     @Query("keyword") String keyword,
                                     @Query("opennow") String opennow,
-                                    @Query("rankby") String rankby,
+                                    @Query("radius") String radius,
                                     @Query("key") String key);
 
     /*@GET("distancematrix/json")

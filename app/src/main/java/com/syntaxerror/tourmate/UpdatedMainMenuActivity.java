@@ -2,9 +2,13 @@ package com.syntaxerror.tourmate;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -13,14 +17,26 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +49,7 @@ import com.syntaxerror.tourmate.pojos.ApiInterface;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.Expenses;
 import com.syntaxerror.tourmate.pojos.FirebaseData;
+import com.syntaxerror.tourmate.pojos.GetNearbyPlacesData;
 import com.syntaxerror.tourmate.pojos.Nearby;
 import com.syntaxerror.tourmate.pojos.NearbyPlaceData;
 import com.syntaxerror.tourmate.pojos.NearbyPlaces;
@@ -58,7 +75,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         RadioRealButtonGroup.OnClickedButtonListener, ViewEventsFragment.OnFragmentInteractionListener,
         ViewExpensesFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
         AddExpenseFragment.OnFragmentInteractionListener, NearbyPlacesFragment.OnFragmentInteractionListener,
-        DisplayNearbyPlacesFragment.OnFragmentInteractionListener {
+        DisplayNearbyPlacesFragment.OnFragmentInteractionListener, UpdatedNearbyPlacesFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView navigation;
 
@@ -89,6 +106,8 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private ApiInterface apiInterface;
 
+    public static final int REQUEST_LOCATION_PERMISSION = 69;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +116,22 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         initFields();
         fetchEvents();
         loadViewEventsFragment();
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            checkLocationPermission();
+        }
+
+        if (!isGooglePlayServicesAvailable()) {
+
+            Log.d("onCreate", "Finishing test case since Google Play Services are not available");
+            finish();
+        }
+
+        else {
+
+            Log.d("onCreate","Google Play Services available.");
+        }
     }
 
     private void initFields() {
@@ -126,23 +161,6 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
             placeDetectionClient = com.google.android.gms.location.places.Places.getPlaceDetectionClient(this, null);
             fetchLocation();
         }
-    }
-
-    public boolean checkLocationPermission() {
-
-        if (ContextCompat.checkSelfPermission(UpdatedMainMenuActivity.this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(UpdatedMainMenuActivity.this,
-                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION);
-
-            return false;
-        }
-
-        else
-
-            return true;
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -240,9 +258,11 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private void nearbyPlacesClicked() {
 
+        radioButtonGroup.setVisibility(View.GONE);
+
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.updatedFragmentLayout, new NearbyPlacesFragment());
+        fragmentTransaction.replace(R.id.updatedFragmentLayout, new UpdatedNearbyPlacesFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -343,6 +363,8 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private void loadViewEventsFragment() {
 
+        radioButtonGroup.setVisibility(View.VISIBLE);
+
         fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.updatedFragmentLayout, viewEventsFragment);
@@ -360,6 +382,23 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public LatLng getLatLng() {
+
+        final LatLng[] mLatLng = new LatLng[1];
+
+        SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
+
+            @Override
+            public void onLocationUpdated(Location location) {
+
+                mLatLng[0] = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+        });
+
+        return mLatLng[0];
     }
 
     @Override
@@ -399,5 +438,36 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
             fetchEvents();
 
         return mEventsList;
+    }
+
+    public boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Asking user if explanation is needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                //Prompt the user once explanation has been shown
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION_PERMISSION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION_PERMISSION);
+            }
+            return false;
+        } else {
+            return true;
+        }
     }
 }
