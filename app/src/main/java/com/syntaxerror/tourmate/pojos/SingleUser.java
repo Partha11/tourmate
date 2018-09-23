@@ -7,12 +7,32 @@ import java.util.regex.Pattern;
 
 public class SingleUser {
 
+    private String userId;
     private String userMail;
     private String userName;
+    private String userGender;
+    private String userAge;
     private FullName fullName;
 
     public SingleUser() {
 
+    }
+
+    public SingleUser(String userId, String userMail, String userName) {
+
+        this.userId = userId;
+        this.userMail = userMail;
+        this.userName = userName;
+    }
+
+    public SingleUser(String userId, String userMail, String userName, String userGender, String userAge, FullName fullName) {
+
+        this.userId = userId;
+        this.userMail = userMail;
+        this.userName = userName;
+        this.userGender = userGender;
+        this.userAge = userAge;
+        this.fullName = fullName;
     }
 
     public SingleUser(String userMail, String userName, FullName fullName) {

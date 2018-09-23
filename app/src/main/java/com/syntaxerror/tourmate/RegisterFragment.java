@@ -162,16 +162,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             }*/
 
             SingleUser singleUser = new SingleUser(userEmailString, userNameString, new FullName(userFirstNameString, userLastNameString));
-
-            if (mListener.onUserRegistered(singleUser)) {
-
-                mListener.onUserRegistered(userEmailString, userPasswordString);
-            }
-
-            else {
-
-                Toast.makeText(mContext, "An error occurred", Toast.LENGTH_SHORT).show();
-            }
+            mListener.onUserRegistered(singleUser, userEmailString, userPasswordString);
         }
     }
 
@@ -199,7 +190,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        void onUserRegistered(String userEmail, String userPassword);
-        boolean onUserRegistered(SingleUser singleUser);
+        void onUserRegistered(SingleUser singleUser, String userEmail, String userPassword);
     }
 }

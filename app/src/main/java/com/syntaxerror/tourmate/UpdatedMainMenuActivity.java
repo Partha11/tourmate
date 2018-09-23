@@ -1,14 +1,13 @@
 package com.syntaxerror.tourmate;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -16,66 +15,42 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.syntaxerror.tourmate.adapters.EventAdapter;
 import com.syntaxerror.tourmate.database.DatabaseManager;
-import com.syntaxerror.tourmate.pojos.ApiClient;
 import com.syntaxerror.tourmate.pojos.ApiInterface;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.Expenses;
 import com.syntaxerror.tourmate.pojos.FirebaseData;
-import com.syntaxerror.tourmate.pojos.GetNearbyPlacesData;
-import com.syntaxerror.tourmate.pojos.Nearby;
-import com.syntaxerror.tourmate.pojos.NearbyPlaceData;
 import com.syntaxerror.tourmate.pojos.NearbyPlaces;
 import com.syntaxerror.tourmate.pojos.Result;
-import com.syntaxerror.tourmate.pojos.SharedPrefData;
-import com.syntaxerror.tourmate.pojos.SingleUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
-import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.syntaxerror.tourmate.MainMenuActivity.LOCATION_PERMISSION;
 
 public class UpdatedMainMenuActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         RadioRealButtonGroup.OnClickedButtonListener, ViewEventsFragment.OnFragmentInteractionListener,
         ViewExpensesFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
-        AddExpenseFragment.OnFragmentInteractionListener, NearbyPlacesFragment.OnFragmentInteractionListener,
-        DisplayNearbyPlacesFragment.OnFragmentInteractionListener, UpdatedNearbyPlacesFragment.OnFragmentInteractionListener {
+        AddExpenseFragment.OnFragmentInteractionListener, DisplayNearbyPlacesFragment.OnFragmentInteractionListener,
+        UpdatedNearbyPlacesFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView navigation;
 
@@ -122,7 +97,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
             checkLocationPermission();
         }
 
-        if (!isGooglePlayServicesAvailable()) {
+        if (!isGooglePlayServicesAvailable() && checkLocationPermission()) {
 
             Log.d("onCreate", "Finishing test case since Google Play Services are not available");
             finish();
@@ -155,12 +130,6 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
         navigation.setOnNavigationItemSelectedListener(this);
         radioButtonGroup.setOnClickedButtonListener(this);
-
-        if (checkLocationPermission()) {
-
-            placeDetectionClient = com.google.android.gms.location.places.Places.getPlaceDetectionClient(this, null);
-            fetchLocation();
-        }
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -180,80 +149,6 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         }
 
         return true;
-    }
-
-    private void fetchLocation() {
-
-        SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
-
-            @Override
-            public void onLocationUpdated(android.location.Location location) {
-
-                latLngString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-        });
-    }
-
-    @Override
-    public List<NearbyPlaces> findNearByPlaces(String placeName) {
-
-        fetchLocation();
-
-        Log.e("Error", "Location- " + latLngString);
-
-        apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<Nearby> call = apiInterface.searchPlaces(latLngString, placeName, "true", "distance",
-                ApiClient.GOOGLE_PLACE_API_KEY);
-
-        call.enqueue(new Callback<Nearby>() {
-
-            @Override
-            public void onResponse(Call<Nearby> call, Response<Nearby> response) {
-
-                Nearby nearbyPlace = response.body();
-
-                Log.e("Info", nearbyPlace.getStatus());
-
-                if (nearbyPlace.getStatus() != null) {
-
-                    if (nearbyPlace.getStatus().equals("OK")) {
-
-                        results = nearbyPlace.getResults();
-                        nearbyPlacesList = new ArrayList<>();
-
-                        for (int i = 0; i < results.size(); i++) {
-
-                            if (i >= 20)
-
-                                break;
-
-                            nearbyPlacesList.add(new NearbyPlaces(nearbyPlace.getResults().get(i).getName(),
-                                    nearbyPlace.getResults().get(i).getVicinity()));
-                        }
-                    }
-
-                    else {
-
-                        Toast.makeText(getApplicationContext(), "No matches found near you", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-                else if (response.code() != 200) {
-
-                    Toast.makeText(getApplicationContext(), "Error " + response.code() + " found.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Nearby> call, Throwable t) {
-                // Log error here since request failed
-                Log.e("Error", t.getLocalizedMessage());
-            }
-        });
-
-        return nearbyPlacesList;
     }
 
     private void nearbyPlacesClicked() {
@@ -465,9 +360,44 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         REQUEST_LOCATION_PERMISSION);
             }
+
             return false;
-        } else {
+        }
+
+        else {
+
             return true;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_logout:
+
+                signOutUser();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void signOutUser() {
+
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(UpdatedMainMenuActivity.this, MainActivity.class);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }

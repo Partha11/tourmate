@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -33,6 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.syntaxerror.tourmate.database.DatabaseManager;
 import com.syntaxerror.tourmate.pojos.FullName;
 import com.syntaxerror.tourmate.pojos.SingleUser;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,17 +61,15 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     private DatabaseManager dbManager;
 
     private List<SingleUser> userList;
-    private HashMap<Integer, SingleUser> userListMap;
-
-    private static int id;
-    private boolean isNewUser;
-    private String userName;
-    private static boolean isSuccessful;
+    private String userEmail;
+    private String userId;
+    private boolean dataFound;
 
     private static final String PREF_KEY = "loggedIn";
     private static final String PREF_USER_NAME = "username";
     private static final String PREF_USER_MAIL = "usermail";
     private static final String PREF_USER_ID = "userId";
+    private static final String PREF_USER_FB_TOKEN = "fbtoken";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +85,8 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                 user = mAuth.getCurrentUser();
 
-                if (user != null) {
+                if (user == null) {
 
-                    Log.e("Prefs Data", String.valueOf(isNewUser));
                     loadHomeFragment();
                 }
 
@@ -111,31 +111,6 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         dbReference = FirebaseDatabase.getInstance().getReference();
 
         userList = new ArrayList<>();
-        userListMap = new HashMap<>();
-
-        dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot i : dataSnapshot.getChildren()) {
-
-                    userList.add(i.getValue(SingleUser.class));
-                    userListMap.put(userListMap.size() , i.getValue(SingleUser.class));
-                }
-
-                id = userListMap.size();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                Toast.makeText(MainActivity.this, "Failed To Fetch", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        isNewUser = prefs.getBoolean(PREF_KEY, false);
     }
 
     private void loadHomeFragment() {
@@ -150,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     protected void onStart() {
 
         super.onStart();
-
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -158,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     protected void onStop() {
 
         super.onStop();
-
         mAuth.removeAuthStateListener(mAuthListener);
     }
 
@@ -180,12 +153,29 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                 if (task.isSuccessful()) {
 
                     user = mAuth.getCurrentUser();
+                    String userId = dbReference.push().getKey();
 
-                    if (user != null)
+                    if (user == null)
 
-                        updatePrefs(user);
+                        loadHomeFragment();
 
-                    switchActivity();
+                    dbReference.child(userId)
+                            .setValue(new SingleUser(userId, user.getEmail(), user.getDisplayName()))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                    switchActivity();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Toast.makeText(MainActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                            loadHomeFragment();
+                        }
+                    });
                 }
 
                 else {
@@ -197,17 +187,9 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void userLogIn(String userEmailOrName, String userPassword) {
+    public void userLogIn(final String userEmailOrName, String userPassword) {
 
-        if (TextUtils.isEmpty(userEmailOrName) || TextUtils.isEmpty(userPassword)) {
-
-            Toast.makeText(this, "Username or Password Empty!", Toast.LENGTH_SHORT).show();
-
-            loadHomeFragment();
-            finish();
-        }
-
-        String userEmail;
+        progressBar.setVisibility(View.VISIBLE);
 
         if (SingleUser.isEmail(userEmailOrName))
 
@@ -215,39 +197,73 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
         else {
 
-            userEmail = dbManager.getUserMail(userEmailOrName);
-            userName = userEmailOrName;
+            dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    dataFound = false;
+
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+
+                        SingleUser singleUser = data.getValue(SingleUser.class);
+
+                        if (singleUser != null) {
+
+                            if (TextUtils.equals(userEmailOrName, singleUser.getUserName())) {
+
+                                userEmail = singleUser.getUserMail();
+                                dataFound = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    Toast.makeText(MainActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                    Log.e("Login Error", databaseError.getMessage());
+                }
+            });
         }
 
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
 
-        mAuth.signInWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        if (dataFound) {
 
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            mAuth.signInWithEmailAndPassword(userEmail, userPassword)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
-                progressBar.setVisibility(View.GONE);
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                if (task.isSuccessful()) {
+                            progressBar.setVisibility(View.GONE);
 
-                    finish();
-                    switchActivity();
+                            if (task.isSuccessful()) {
+
+                                finish();
+                                switchActivity();
+                            } else {
+
+                                Toast.makeText(MainActivity.this, "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                    Log.e("Error", e.getLocalizedMessage());
                 }
+            });
+        }
 
-                else {
+        else {
 
-                    Toast.makeText(MainActivity.this, "Wrong Email or Password", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-                Log.e("Error", e.getLocalizedMessage());
-            }
-        });
+            Toast.makeText(this, "Username or Email Incorrect", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -270,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void onUserRegistered(final String userEmail, final String userPassword) {
+    public void onUserRegistered(final SingleUser singleUser, final String userEmail, final String userPassword) {
 
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
@@ -279,13 +295,31 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                 if (task.isSuccessful()) {
 
+                    userId = dbReference.push().getKey();
+
+                    dbReference.child(userId).setValue(singleUser)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if (task.isSuccessful()) {
+
+                                        updatePrefs(userId);
+                                        finish();
+                                        switchActivity();
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Log.e("Error", e.getLocalizedMessage());
+                        }
+                    });
+
                     Toast.makeText(MainActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-
-                    user = mAuth.getCurrentUser();
-
-                    if (user != null)
-
-                        updatePrefs(user);
                 }
 
                 else {
@@ -297,14 +331,6 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                     else
 
                         Toast.makeText(MainActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-
-                    if (dbManager.deleteData(userEmail))
-
-                        Log.e("Data Deletion", "successful");
-
-                    else
-
-                        Log.e("Data Deletion", "failed");
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -317,82 +343,27 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         });
     }
 
-    @Override
-    public boolean onUserRegistered(SingleUser singleUser) {
-
-        boolean isDataUnique;
-
-        if (userListMap.containsValue(singleUser))
-
-            isDataUnique = false;
-
-        else
-
-            isDataUnique = true;
-
-        if (!isDataUnique) {
-
-            Toast.makeText(this, "Email or Username Exists", Toast.LENGTH_SHORT).show();
-
-            loadHomeFragment();
-            return false;
-        }
-
-        dbReference.child(String.valueOf(++id)).setValue(singleUser)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                if (task.isSuccessful())
-
-                    isSuccessful = true;
-
-                else
-
-                    isSuccessful = false;
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-                Log.e("Error", e.getLocalizedMessage());
-            }
-        });
-
-        return isSuccessful;
-    }
-
-    private void updatePrefs(boolean isLoggedIn) {
+    private void updatePrefs(String userId) {
 
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putBoolean(PREF_KEY, isLoggedIn);
+        editor.putString(PREF_USER_ID, userId);
         editor.commit();
 
-        Log.e("Prefs Written: ", String.valueOf(isLoggedIn));
+        Log.e("Message", userId);
     }
 
-    private void updatePrefs(FirebaseUser user) {
+    private void updatePrefs(String userId, String fbToken) {
 
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        if (user.getDisplayName() != null)
-
-            editor.putString(PREF_USER_NAME, user.getDisplayName());
-
-        else
-
-            editor.putString(PREF_USER_NAME, userName);
-
-        editor.putString(PREF_USER_ID, user.getUid());
-        editor.putString(PREF_USER_MAIL, user.getEmail());
+        editor.putString(PREF_USER_ID, userId);
+        editor.putString(PREF_USER_FB_TOKEN, fbToken);
         editor.commit();
 
-        Log.e("Message", "Write To Prefs Complete " + user.getDisplayName() + " " + user.getEmail());
+        Log.e("Message", userId);
     }
 
     private void switchActivity() {

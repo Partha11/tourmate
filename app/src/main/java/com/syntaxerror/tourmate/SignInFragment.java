@@ -56,10 +56,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     private Button signInButton;
 
-    private OnFragmentInteractionListener data;
-
-    private RegisterFragment registerFragment;
-
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -101,8 +97,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
         signInButton = view.findViewById(R.id.signInButton);
 
-        registerFragment = new RegisterFragment();
-
         fragmentManager = getActivity().getSupportFragmentManager();
 
         signInButton.setOnClickListener(this);
@@ -122,7 +116,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                data.isLoggedIn(loginResult.getAccessToken());
+                mListener.isLoggedIn(loginResult.getAccessToken());
             }
 
             @Override
@@ -174,7 +168,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         }
 
         mContext = context;
-        data = (OnFragmentInteractionListener) mContext;
     }
 
     @Override
@@ -202,14 +195,14 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
             else
 
-                data.userLogIn(userEmailString, userPasswordString);
+                mListener.userLogIn(userEmailString, userPasswordString);
         }
 
         else if (v == createAccount) {
 
             fragmentTransaction = fragmentManager.beginTransaction();
 
-            fragmentTransaction.replace(R.id.fragmentLayout, registerFragment);
+            fragmentTransaction.replace(R.id.fragmentLayout, new RegisterFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }

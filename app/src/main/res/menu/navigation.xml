@@ -8,17 +8,17 @@
 
     <item
         android:id="@+id/navigation_nearby"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_nearby" />
-
-    <item
-        android:id="@+id/navigation_maps"
         android:icon="@drawable/ic_navigation"
-        android:title="@string/title_maps" />
+        android:title="@string/title_nearby" />
 
     <item
         android:id="@+id/navigation_memories"
         android:icon="@drawable/ic_add_photos"
         android:title="@string/title_memories" />
+
+    <item
+        android:id="@+id/navigation_maps"
+        android:icon="@drawable/ic_navigation"
+        android:title="@string/title_maps" />
 
 </menu>
