@@ -39,8 +39,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
     private DatabaseManager dbManager;
 
-    private ProgressBar progressBar;
-
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -77,8 +75,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         userEmail = view.findViewById(R.id.registerUserEmail);
         userPassword = view.findViewById(R.id.registerUserPassword);
         userName = view.findViewById(R.id.registerUserName);
-
-        progressBar = view.findViewById(R.id.registerProgressBar);
 
         registerButton = view.findViewById(R.id.registerButton);
         registerButton.setOnClickListener(this);
@@ -125,8 +121,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
 
-        progressBar.setVisibility(View.VISIBLE);
-
         if (v == registerButton) {
 
             String userFirstNameString = firstName.getText().toString().trim();
@@ -134,8 +128,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             String userEmailString = userEmail.getText().toString().trim();
             String userPasswordString = userPassword.getText().toString().trim();
             String userNameString = userName.getText().toString().trim();
-
-            progressBar.setVisibility(View.GONE);
 
 /*            if (TextUtils.isEmpty(userEmailString) || TextUtils.isEmpty(userPasswordString) ||
                     TextUtils.isEmpty(userFullNameString) || TextUtils.isEmpty(userNameString))
@@ -161,8 +153,28 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 }
             }*/
 
-            SingleUser singleUser = new SingleUser(userEmailString, userNameString, new FullName(userFirstNameString, userLastNameString));
-            mListener.onUserRegistered(singleUser, userEmailString, userPasswordString);
+            if (TextUtils.isEmpty(userFirstNameString) || TextUtils.isEmpty(userLastNameString))
+
+                Toast.makeText(mContext, "Please Enter Your Name", Toast.LENGTH_SHORT).show();
+
+            else if (TextUtils.isEmpty(userEmailString))
+
+                userEmail.setError("This field is required");
+
+            else if (TextUtils.isEmpty(userPasswordString))
+
+                userPassword.setError("Password can not be empty");
+
+            else if (userPasswordString != null && userPasswordString.length() < 6) {
+
+                userPassword.setError("Password must contain at least 6 characters");
+            }
+
+            else {
+
+                SingleUser singleUser = new SingleUser(userEmailString, userNameString, new FullName(userFirstNameString, userLastNameString));
+                mListener.onUserRegistered(singleUser, userEmailString, userPasswordString);
+            }
         }
     }
 

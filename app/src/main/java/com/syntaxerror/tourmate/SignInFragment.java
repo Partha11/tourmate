@@ -46,13 +46,13 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
-    private LoginButton loginButton;
+    private Button loginButton;
     private CallbackManager callbackManager;
 
     private EditText userEmail;
     private EditText userPassword;
 
-    private TextView createAccount;
+    private Button createAccount;
 
     private Button signInButton;
 
@@ -102,7 +102,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         signInButton.setOnClickListener(this);
         createAccount.setOnClickListener(this);
 
-        FacebookSdk.sdkInitialize(getActivity());
+    /*    FacebookSdk.sdkInitialize(getActivity());
         AppEventsLogger.activateApp(mContext);
 
         loginButton = view.findViewById(R.id.fbLoginButton);
@@ -130,7 +130,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
                 Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         return view;
     }
