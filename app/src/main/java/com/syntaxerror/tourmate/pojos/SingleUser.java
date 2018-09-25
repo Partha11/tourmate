@@ -18,6 +18,14 @@ public class SingleUser {
 
     }
 
+    public SingleUser(String userId, String userMail, String userName, FullName fullName) {
+
+        this.userId = userId;
+        this.userMail = userMail;
+        this.userName = userName;
+        this.fullName = fullName;
+    }
+
     public SingleUser(String userId, String userMail, String userName) {
 
         this.userId = userId;
@@ -56,6 +64,11 @@ public class SingleUser {
     public FullName getFullName() {
 
         return fullName;
+    }
+
+    public String getUserId() {
+
+        return userId;
     }
 
     public String getUserMail() {

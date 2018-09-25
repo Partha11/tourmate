@@ -33,6 +33,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     private EditText lastName;
     private EditText userEmail;
     private EditText userPassword;
+    private EditText userReEnterPassword;
     private EditText userName;
 
     private Button registerButton;
@@ -74,6 +75,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         lastName = view.findViewById(R.id.registerLastName);
         userEmail = view.findViewById(R.id.registerUserEmail);
         userPassword = view.findViewById(R.id.registerUserPassword);
+        userReEnterPassword = view.findViewById(R.id.registerUserReEnterPassword);
         userName = view.findViewById(R.id.registerUserName);
 
         registerButton = view.findViewById(R.id.registerButton);
@@ -127,31 +129,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             String userLastNameString = lastName.getText().toString().trim();
             String userEmailString = userEmail.getText().toString().trim();
             String userPasswordString = userPassword.getText().toString().trim();
+            String userReEnterPasswordString = userReEnterPassword.getText().toString().trim();
             String userNameString = userName.getText().toString().trim();
-
-/*            if (TextUtils.isEmpty(userEmailString) || TextUtils.isEmpty(userPasswordString) ||
-                    TextUtils.isEmpty(userFullNameString) || TextUtils.isEmpty(userNameString))
-
-                Toast.makeText(mContext, "Fields Can Not Be Empty!", Toast.LENGTH_LONG).show();
-
-            else {
-
-                String testMail = dbManager.getUserMail(userNameString);
-
-                if (TextUtils.isEmpty(testMail)) {
-
-                    if (dbManager.insertData(new SingleUser(userEmailString, userNameString))) {
-
-                        OnFragmentInteractionListener data = (OnFragmentInteractionListener) mContext;
-                        data.onUserRegistered(userEmailString, userPasswordString);
-                    }
-                }
-
-                else {
-
-                    Toast.makeText(mContext, "Email or Username Already Exists!", Toast.LENGTH_SHORT).show();
-                }
-            }*/
 
             if (TextUtils.isEmpty(userFirstNameString) || TextUtils.isEmpty(userLastNameString))
 
@@ -165,9 +144,14 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
                 userPassword.setError("Password can not be empty");
 
-            else if (userPasswordString != null && userPasswordString.length() < 6) {
+            else if (userPasswordString.length() < 6) {
 
                 userPassword.setError("Password must contain at least 6 characters");
+            }
+
+            else if (!TextUtils.equals(userPasswordString, userReEnterPasswordString)) {
+
+                userReEnterPassword.setError("Password doesn't match");
             }
 
             else {

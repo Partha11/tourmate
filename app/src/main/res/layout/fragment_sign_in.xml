@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@drawable/layout_bg">
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="Email"
+                android:hint="Email or username"
                 android:paddingLeft="10sp"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -101,5 +102,12 @@
             android:text="Join Now"
             android:textAllCaps="false"/>
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/hiddenFbButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
     </LinearLayout>
+
 </ScrollView>

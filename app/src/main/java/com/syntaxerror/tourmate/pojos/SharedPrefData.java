@@ -13,6 +13,7 @@ public class SharedPrefData {
     private SharedPreferences.Editor editor;
 
     private static final String EVENT_ID = "eventId";
+    private static final String PREF_USER_ID = "userId";
     private static final String PREF_NAME = "events";
 
     public SharedPrefData(Context context) {
@@ -34,5 +35,10 @@ public class SharedPrefData {
     public String fetchEventId() {
 
         return prefs.getString(EVENT_ID, null);
+    }
+
+    public String getUserId() {
+
+        return prefs.getString(PREF_USER_ID, null);
     }
 }

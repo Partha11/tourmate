@@ -1,7 +1,9 @@
 package com.syntaxerror.tourmate;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -46,6 +48,8 @@ import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
+import static com.syntaxerror.tourmate.MainActivity.USER_PREF_NAME;
+
 public class UpdatedMainMenuActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         RadioRealButtonGroup.OnClickedButtonListener, ViewEventsFragment.OnFragmentInteractionListener,
         ViewExpensesFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
@@ -72,14 +76,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     private List<Events> eventsList;
     private List<Expenses> expensesList;
 
-    private PlaceDetectionClient placeDetectionClient;
-    private LatLng latLng;
-    private String latLngString;
-
-    private List<Result> results;
-    private List<NearbyPlaces> nearbyPlacesList;
-
-    private ApiInterface apiInterface;
+    public static String userId;
 
     public static final int REQUEST_LOCATION_PERMISSION = 69;
 
@@ -87,6 +84,10 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updated_main_menu);
+
+        if (userId != null)
+
+            userId = null;
 
         initFields();
         fetchEvents();
@@ -123,6 +124,8 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         viewEventsFragment = new ViewEventsFragment();
         viewExpensesFragment = new ViewExpensesFragment();
 
+        readPrefs();
+
         firebaseData = new FirebaseData(UpdatedMainMenuActivity.this);
         dbManager = new DatabaseManager(this);
 
@@ -130,6 +133,14 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
         navigation.setOnNavigationItemSelectedListener(this);
         radioButtonGroup.setOnClickedButtonListener(this);
+    }
+
+    private void readPrefs() {
+
+        SharedPreferences prefs = this.getSharedPreferences(MainActivity.USER_PREF_NAME, Context.MODE_PRIVATE);
+        userId = prefs.getString(MainActivity.PREF_USER_ID, "Cant read data");
+
+        Log.e("Message", userId);
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -258,6 +269,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private void loadViewEventsFragment() {
 
+        radioButtonGroup.setPosition(0);
         radioButtonGroup.setVisibility(View.VISIBLE);
 
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -268,6 +280,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private void loadViewExpenseFragment() {
 
+        radioButtonGroup.setPosition(1);
         fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.updatedFragmentLayout, viewExpensesFragment);

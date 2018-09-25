@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorGray">#696969</color>
+    <color name="colorGray">#c6c6c6</color>
     <color name="colorLimeGreen">#20C659</color>
     <color name="colorTeal">#006A5D</color>
     <color name="colorKhaki">#F7E394</color>
@@ -13,9 +13,9 @@
     <color name="colorGradientLast">#ba68c8</color>
     <color name="colorSignInButton">#e53935</color>
 
-    <color name="primary">#E43F3F</color>
-    <color name="primary_dark">#E12929</color>
-    <color name="primary_darker">#CC1D1D</color>
+    <color name="primary">#48AD71</color>
+    <color name="primary_dark">#48AD71</color>
+    <color name="primary_darker">#06574E</color>
     <color name="accent">#FFFFFF</color>
 
     <color name="black">#000000</color>

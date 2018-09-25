@@ -48,6 +48,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     private Button loginButton;
     private CallbackManager callbackManager;
+    private LoginButton mFacebookLoginButton;
 
     private EditText userEmail;
     private EditText userPassword;
@@ -96,41 +97,14 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         createAccount = view.findViewById(R.id.createAccount);
 
         signInButton = view.findViewById(R.id.signInButton);
+        loginButton = view.findViewById(R.id.fbLoginButton);
+        mFacebookLoginButton = view.findViewById(R.id.hiddenFbButton);
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
         signInButton.setOnClickListener(this);
         createAccount.setOnClickListener(this);
-
-    /*    FacebookSdk.sdkInitialize(getActivity());
-        AppEventsLogger.activateApp(mContext);
-
-        loginButton = view.findViewById(R.id.fbLoginButton);
-        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
-
-        callbackManager = CallbackManager.Factory.create();
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                mListener.isLoggedIn(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-
-                Toast.makeText(mContext, "Operation Canceled By User!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-
-                Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        loginButton.setOnClickListener(this);
 
         return view;
     }
@@ -206,12 +180,42 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
+
+        else if (v == loginButton) {
+
+            callbackManager = CallbackManager.Factory.create();
+
+            mFacebookLoginButton.performClick();
+            mFacebookLoginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
+            mFacebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+
+                    mListener.facebookLogin(loginResult.getAccessToken());
+
+                    Log.e("Permissions", loginResult.getRecentlyGrantedPermissions().toString());
+                }
+
+                @Override
+                public void onCancel() {
+
+                    Toast.makeText(mContext, "Operation Canceled By User!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+
+                    Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        void isLoggedIn(AccessToken accessToken);
+        void facebookLogin(AccessToken accessToken);
         void userLogIn(String userEmailOrName, String userPassword);
     }
 }

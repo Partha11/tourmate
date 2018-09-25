@@ -1,5 +1,6 @@
 package com.syntaxerror.tourmate;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -65,11 +66,12 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     private String userId;
     private boolean dataFound;
 
-    private static final String PREF_KEY = "loggedIn";
-    private static final String PREF_USER_NAME = "username";
-    private static final String PREF_USER_MAIL = "usermail";
-    private static final String PREF_USER_ID = "userId";
-    private static final String PREF_USER_FB_TOKEN = "fbtoken";
+    public static final String USER_PREF_NAME = "CurrentUser";
+    public static final String PREF_KEY = "loggedIn";
+    public static final String PREF_USER_NAME = "username";
+    public static final String PREF_USER_MAIL = "usermail";
+    public static final String PREF_USER_ID = "userId";
+    public static final String PREF_USER_FB_TOKEN = "fbtoken";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void isLoggedIn(AccessToken accessToken) {
+    public void facebookLogin(final AccessToken accessToken) {
 
         AuthCredential authCredential = FacebookAuthProvider.getCredential(accessToken.getToken());
 
@@ -159,23 +161,33 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                         loadHomeFragment();
 
-                    dbReference.child(userId)
-                            .setValue(new SingleUser(userId, user.getEmail(), user.getDisplayName()))
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+                    else {
 
-                                    switchActivity();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
+                        Log.e("Facebook", accessToken.toString());
 
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
+                        String[] fullNameArray = TextUtils.split(user.getDisplayName(), " ");
 
-                            Toast.makeText(MainActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
-                            loadHomeFragment();
-                        }
-                    });
+                        FullName fullName = new FullName(fullNameArray[0], fullNameArray[1]);
+                        SingleUser singleUser = new SingleUser(userId, user.getEmail(), user.getDisplayName(), fullName);
+
+                        dbReference.child(userId)
+                                .setValue(singleUser)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                        switchActivity();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                                Toast.makeText(MainActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                                loadHomeFragment();
+                            }
+                        });
+                    }
                 }
 
                 else {
@@ -213,11 +225,20 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                             if (TextUtils.equals(userEmailOrName, singleUser.getUserName())) {
 
                                 userEmail = singleUser.getUserMail();
+                                userId = singleUser.getUserId();
                                 dataFound = true;
                                 break;
                             }
                         }
                     }
+
+                    if (userId != null)
+
+                        Log.e("Logging In", userId);
+
+                    else
+
+                        Log.e("Logging In", "Id null");
                 }
 
                 @Override
@@ -245,9 +266,12 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                                 finish();
                                 switchActivity();
-                            } else {
+                            }
+
+                            else {
 
                                 Toast.makeText(MainActivity.this, "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
+                                Log.e("task", task.toString());
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -297,7 +321,10 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                     userId = dbReference.push().getKey();
 
-                    dbReference.child(userId).setValue(singleUser)
+                    SingleUser userWithId = new SingleUser(userId, singleUser.getUserMail(),
+                            singleUser.getUserName(), singleUser.getFullName());
+
+                    dbReference.child(userId).setValue(userWithId)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
 
                                 @Override
@@ -345,11 +372,11 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
     private void updatePrefs(String userId) {
 
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = this.getSharedPreferences(USER_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         editor.putString(PREF_USER_ID, userId);
-        editor.commit();
+        editor.apply();
 
         Log.e("Message", userId);
     }

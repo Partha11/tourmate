@@ -11,9 +11,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.syntaxerror.tourmate.UpdatedMainMenuActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.syntaxerror.tourmate.UpdatedMainMenuActivity.userId;
 
 public class FirebaseData {
 
@@ -30,11 +33,11 @@ public class FirebaseData {
 
     public FirebaseData(Context context) {
 
-        dbReference = FirebaseDatabase.getInstance().getReference();
-        dbEventNode = dbReference.child("Events");
-        dbExpenseNode = dbReference.child("Expenses");
+        Log.e("Id", userId);
 
-        sharedPrefData = new SharedPrefData(context);
+        dbReference = FirebaseDatabase.getInstance().getReference();
+        dbEventNode = dbReference.child(userId).child("Events");
+        dbExpenseNode = dbReference.child(userId).child("Expenses");
     }
 
     public boolean addEvent(Events event) {
