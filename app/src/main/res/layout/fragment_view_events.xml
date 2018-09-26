@@ -10,14 +10,12 @@
         android:id="@+id/searchEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search Events"
         android:textSize="25sp"
         android:textColorHint="@color/colorGray"
-        android:drawableRight="@drawable/ic_search"
-        android:paddingRight="10sp"
+        android:drawableLeft="@drawable/ic_search"
         android:paddingLeft="20sp"
-        android:background="@drawable/search_bar_mod"
-        android:layout_margin="20sp"/>
+        android:layout_margin="20sp"
+        android:inputType="textAutoComplete"/>
 
     <ListView
         android:id="@+id/viewEventsList"
@@ -30,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="45dp"
-        app:fab_fabBackgroundColor="@color/com_facebook_messenger_blue"
-        app:fab_miniFabBackgroundColor="@color/com_facebook_messenger_blue"
+        app:fab_fabBackgroundColor="@color/colorLimeGreen"
+        app:fab_miniFabBackgroundColor="@color/colorLimeGreen"
         app:fab_miniFabTextColor="@color/colorWhite"
         app:fab_menu="@menu/fab"/>
 

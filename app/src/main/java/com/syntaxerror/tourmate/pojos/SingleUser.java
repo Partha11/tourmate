@@ -81,6 +81,16 @@ public class SingleUser {
         return userName;
     }
 
+    public String getUserGender() {
+
+        return userGender;
+    }
+
+    public String getUserAge() {
+
+        return userAge;
+    }
+
     public static String emailToName(String userMail) {
 
         String userName = "";

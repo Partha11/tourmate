@@ -22,8 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="45dp"
-        app:fab_fabBackgroundColor="@color/com_facebook_messenger_blue"
-        app:fab_miniFabBackgroundColor="@color/com_facebook_messenger_blue"
+        app:fab_fabBackgroundColor="@color/colorLimeGreen"
+        app:fab_miniFabBackgroundColor="@color/colorLimeGreen"
         app:fab_miniFabTextColor="@color/colorWhite"
         app:fab_menu="@menu/fab"/>
 

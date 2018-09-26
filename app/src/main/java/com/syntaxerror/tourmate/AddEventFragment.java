@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,6 +138,12 @@ public class AddEventFragment extends Fragment implements View.OnClickListener {
 
                 Events event = new Events(mTravelDescription, mTravelEstBudget, mTravelFromDate, mTravelToDate);
                 mListener.addEventDetails(event);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.replace(R.id.updatedFragmentLayout, new ViewEventsFragment());
+                fragmentTransaction.commit();
             }
         }
     }

@@ -264,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
 
                             if (task.isSuccessful()) {
 
+                                updatePrefs(userId);
                                 finish();
                                 switchActivity();
                             }

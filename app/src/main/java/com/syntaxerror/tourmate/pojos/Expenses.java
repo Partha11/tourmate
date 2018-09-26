@@ -38,4 +38,20 @@ public class Expenses {
 
         return expenseAmount;
     }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setExpenseDetails(String expenseDetails) {
+        this.expenseDetails = expenseDetails;
+    }
+
+    public void setExpenseAmount(String expenseAmount) {
+        this.expenseAmount = expenseAmount;
+    }
 }

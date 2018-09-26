@@ -5,13 +5,15 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGray">#c6c6c6</color>
-    <color name="colorLimeGreen">#20C659</color>
+    <color name="colorLimeGreen">#5CD167</color>
     <color name="colorTeal">#006A5D</color>
     <color name="colorKhaki">#F7E394</color>
     <color name="colorGradientFirst">#f48fb1</color>
     <color name="colorGradientMiddle">#ce93d8</color>
     <color name="colorGradientLast">#ba68c8</color>
     <color name="colorSignInButton">#e53935</color>
+    <color name="colorDarkCyan">#009688</color>
+    <color name="colorIvory">#FCF9E8</color>
 
     <color name="primary">#48AD71</color>
     <color name="primary_dark">#48AD71</color>
@@ -26,4 +28,10 @@
     <color name="aluminum">#999999</color>
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorBackground">#eaaf02</color>
+    <color name="colorBottomBackground">#729101</color>
+    <color name="colorCircleStroke">#df9502</color>
+    <color name="colorSubTitle">#38455B</color>
 </resources>

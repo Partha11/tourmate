@@ -26,11 +26,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.syntaxerror.tourmate.adapters.ExpenseAdapter;
+import com.syntaxerror.tourmate.database.DatabaseManager;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.Expenses;
 import com.syntaxerror.tourmate.pojos.NearbyPlaceData;
+import com.syntaxerror.tourmate.pojos.StaticData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,9 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
 
     private FabSpeedDial fab;
 
+    private DatabaseReference dbExpenseNode;
+    private DatabaseManager dbManager;
+
     public ViewExpensesFragment() {
         // Required empty public constructor
     }
@@ -94,37 +100,65 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
 
         View view = inflater.inflate(R.layout.fragment_view_expenses, container, false);
 
+        dbExpenseNode = FirebaseDatabase.getInstance().getReference().child(UpdatedMainMenuActivity.userId).child("Expenses");
+
         getActivity().setTitle("Expenses");
 
         fab = view.findViewById(R.id.fabExpense);
         mSpinner = view.findViewById(R.id.expenseSpinner);
         mListView = view.findViewById(R.id.viewExpensesList);
+
         addEvent = new AddEventFragment();
         addExpense = new AddExpenseFragment();
         fragmentManager = getActivity().getSupportFragmentManager();
 
         fab.addOnMenuItemClickListener(this);
 
-        eventsList = new ArrayList<>();
-        eventsList = mListener.getAllEvents();
+        expensesList = new ArrayList<>();
+        eventsList = dbManager.getAllEventsData();
+
+        if (eventsList == null)
+
+            eventsList = new ArrayList<>();
 
         initSpinner();
 
+        expenseAdapter = new ExpenseAdapter(mContext, R.layout.view_expense_model, expensesList);
+        expenseAdapter.notifyDataSetChanged();
+        mListView.setAdapter(expenseAdapter);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if (eventsList != null) {
+                if (eventsList != null && eventsList.size() > 0) {
 
                     String eventId = eventsList.get(position).getEventId();
-                    expensesList = mListener.fetchExpenseData(eventId);
 
-                    if (expensesList != null) {
+                    Log.d("EventId", eventId);
 
-                        expenseAdapter = new ExpenseAdapter(mContext, R.layout.view_expense_model, expensesList);
-                        mListView.setAdapter(expenseAdapter);
-                    }
+                    Query query = dbExpenseNode.orderByChild("eventId").equalTo(eventId);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for (DataSnapshot i : dataSnapshot.getChildren()) {
+
+                                Expenses expenses = i.getValue(Expenses.class);
+                                expensesList.add(expenses);
+                                expenseAdapter.notifyDataSetChanged();
+
+                                Log.d("Expenses", expenses.getEventId());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            Log.d("Expenses", databaseError.getMessage());
+                        }
+                    });
                 }
 
                 else
@@ -145,22 +179,16 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
 
     private void initSpinner() {
 
-        if (eventsList == null) {
+        if (eventsList != null) {
 
-            Toast.makeText(mContext, "Something went wrong.Please try again", Toast.LENGTH_SHORT).show();
-            eventsList = mListener.getAllEvents();
-        }
-
-        else {
+            Log.d("Eventslist Size", String.valueOf(eventsList.size()));
 
             List<String> nameList = new ArrayList<>();
 
             for (Events i : eventsList) {
 
                 String data = i.getTravelDescription() + "(" + i.getFromDate() + ")";
-
                 nameList.add(data);
-
             }
 
             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_dropdown_item, nameList);
@@ -194,6 +222,7 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
         }
 
         mContext = context;
+        dbManager = new DatabaseManager(mContext);
     }
 
     @Override
@@ -242,7 +271,5 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        List<Expenses> fetchExpenseData(String id);
-        List<Events> getAllEvents();
     }
 }

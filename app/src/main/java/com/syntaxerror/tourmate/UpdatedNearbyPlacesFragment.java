@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,11 +118,22 @@ public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyC
     }
 
     @Override
+    public void onResume() {
+
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_updated_nearby_places, container, false);
-
-        getActivity().setTitle("Nearby");
 
         fab = view.findViewById(R.id.nearbyFab);
         fab.addOnMenuItemClickListener(this);

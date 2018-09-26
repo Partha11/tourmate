@@ -3,6 +3,7 @@ package com.syntaxerror.tourmate;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -16,9 +17,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.syntaxerror.tourmate.adapters.EventAdapter;
+import com.syntaxerror.tourmate.database.DatabaseManager;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.NearbyPlaceData;
+import com.syntaxerror.tourmate.pojos.StaticData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +53,9 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
 
+    private DatabaseReference dbEventNode;
+    private DatabaseManager dbManager;
+
     private AddEventFragment addEvent;
 
     public ViewEventsFragment() {
@@ -67,8 +78,6 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        mListener.getAllEvents();
     }
 
     @Override
@@ -76,22 +85,43 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
 
         View view = inflater.inflate(R.layout.fragment_view_events, container, false);
 
-        mListener.getAllEvents();
+        dbEventNode = FirebaseDatabase.getInstance().getReference().child(UpdatedMainMenuActivity.userId).child("Events");
 
+        mListView = view.findViewById(R.id.viewEventsList);
         fab = view.findViewById(R.id.fabEvents);
         fragmentManager = getActivity().getSupportFragmentManager();
         addEvent = new AddEventFragment();
 
-        //eventsList = new ArrayList<>();
-        eventsList = mListener.getAllEvents();
-
-        fab.addOnMenuItemClickListener(this);
-
-        mListView = view.findViewById(R.id.viewEventsList);
+        eventsList = new ArrayList<>();
         eventAdapter = new EventAdapter(mContext, R.layout.view_event_model, eventsList);
+        eventAdapter.notifyDataSetChanged();
         mListView.setAdapter(eventAdapter);
 
-        eventAdapter.notifyDataSetChanged();
+        dbEventNode.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot i : dataSnapshot.getChildren()) {
+
+                    Events singleEvent = i.getValue(Events.class);
+                    eventsList.add(singleEvent);
+                    dbManager.insertEventData(singleEvent);
+
+                    eventAdapter.notifyDataSetChanged();
+                }
+
+                StaticData.setNumberOfEvents(eventsList.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Log.e("Error Occurred", databaseError.getMessage());
+            }
+        });
+
+        fab.addOnMenuItemClickListener(this);
 
         return view;
     }
@@ -122,6 +152,8 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
 
         getActivity().setTitle("Events");
         mContext = context;
+
+        dbManager = new DatabaseManager(mContext);
     }
 
     @Override
@@ -163,6 +195,5 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        List<Events> getAllEvents();
     }
 }

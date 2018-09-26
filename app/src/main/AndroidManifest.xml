@@ -67,7 +67,7 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".UpdatedMainMenuActivity"
-            android:label="@string/title_activity_updated_main_menu"></activity>
+            android:label="@string/title_activity_updated_main_menu" />
     </application>
 
 </manifest>

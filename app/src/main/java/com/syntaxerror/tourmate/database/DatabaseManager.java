@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.EventLog;
 
 import com.syntaxerror.tourmate.pojos.Events;
+import com.syntaxerror.tourmate.pojos.FullName;
 import com.syntaxerror.tourmate.pojos.SingleUser;
 
 import java.util.ArrayList;
@@ -24,16 +25,35 @@ public class DatabaseManager {
         helper = new DatabaseHelper(context);
     }
 
-    public boolean insertData(SingleUser singleUser) {
+    public boolean insertSingleUser(SingleUser singleUser) {
 
         database = helper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(DatabaseHelper.KEY_MAIL, singleUser.getUserMail());
-        contentValues.put(DatabaseHelper.KEY_NAME, singleUser.getUserName());
+        String fullName = singleUser.getFullName().getFirstName() + " " + singleUser.getFullName().getLastName();
 
-        long isInserted = database.insert(DatabaseHelper.TABLE_NAME, null, contentValues);
+        contentValues.put(DatabaseHelper.KEY_USER_ID, singleUser.getUserId());
+        contentValues.put(DatabaseHelper.KEY_USER_NAME, singleUser.getUserName());
+        contentValues.put(DatabaseHelper.KEY_USER_FULL_NAME, fullName);
+
+        if (singleUser.getUserGender() == null)
+
+            contentValues.put(DatabaseHelper.KEY_USER_GENDER, "Not set");
+
+        else
+
+            contentValues.put(DatabaseHelper.KEY_USER_GENDER, singleUser.getUserGender());
+
+        if (singleUser.getUserAge() == null)
+
+            contentValues.put(DatabaseHelper.KEY_USER_AGE, "Not set");
+
+        else
+
+            contentValues.put(DatabaseHelper.KEY_USER_AGE, singleUser.getUserAge());
+
+        long isInserted = database.insert(DatabaseHelper.USER_TABLE_NAME, null, contentValues);
 
         database.close();
 
@@ -69,6 +89,40 @@ public class DatabaseManager {
         else
 
             return false;
+    }
+
+    public SingleUser getSingleUserData() {
+
+        database = helper.getReadableDatabase();
+        SingleUser singleUser = new SingleUser();
+
+        String query = "SELECT * FROM " + DatabaseHelper.USER_TABLE_NAME + ";";
+
+        Cursor cursor = database.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+
+            String mUserId = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_USER_ID));
+            String mUserName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_USER_NAME));
+            String mUserMail = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_USER_MAIL));
+            String mUserFullName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_USER_FULL_NAME));
+            String mUserGender = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_USER_GENDER));
+            String mUserAge = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_USER_AGE));
+
+            if (mUserGender == null)
+
+                mUserGender = "Male";
+
+            if (mUserAge == null)
+
+                mUserAge = "Not set";
+
+            String[] names = TextUtils.split(mUserFullName, " ");
+            singleUser = new SingleUser(mUserId, mUserMail, mUserName, mUserGender, mUserAge, new FullName(names[0], names[1]));
+        }
+
+        database.close();
+        return singleUser;
     }
 
     public List<Events> getAllEventsData() {
@@ -111,14 +165,14 @@ public class DatabaseManager {
 
         Cursor cursor;
         String userMail = "";
-        String query = "SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE " + DatabaseHelper.KEY_NAME +
+        String query = "SELECT * FROM " + DatabaseHelper.USER_TABLE_NAME + " WHERE " + DatabaseHelper.KEY_USER_NAME +
                 " = '" + userName + "';";
 
         cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
 
-            userMail = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_MAIL));
+            userMail = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_USER_MAIL));
 
             database.close();
         }
@@ -132,14 +186,12 @@ public class DatabaseManager {
             return null;
     }
 
-    public boolean deleteData(String userEmail) {
+    public boolean deleteAllData() {
 
         database = helper.getWritableDatabase();
+        int isDeleted = database.delete(DatabaseHelper.EVENT_TABLE_NAME, null, null);
 
-        String whereClause = DatabaseHelper.KEY_MAIL + " = ?";
-        String[] whereArgs = {userEmail};
-
-        int isDeleted = database.delete(DatabaseHelper.TABLE_NAME, whereClause, whereArgs);
+        database.close();
 
         if (isDeleted > 0)
 

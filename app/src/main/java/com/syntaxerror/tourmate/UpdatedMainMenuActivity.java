@@ -20,11 +20,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,12 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.syntaxerror.tourmate.database.DatabaseManager;
-import com.syntaxerror.tourmate.pojos.ApiInterface;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.Expenses;
 import com.syntaxerror.tourmate.pojos.FirebaseData;
-import com.syntaxerror.tourmate.pojos.NearbyPlaces;
-import com.syntaxerror.tourmate.pojos.Result;
+import com.syntaxerror.tourmate.pojos.SingleUser;
+import com.syntaxerror.tourmate.pojos.StaticData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +46,12 @@ import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
-import static com.syntaxerror.tourmate.MainActivity.USER_PREF_NAME;
-
 public class UpdatedMainMenuActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         RadioRealButtonGroup.OnClickedButtonListener, ViewEventsFragment.OnFragmentInteractionListener,
         ViewExpensesFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
         AddExpenseFragment.OnFragmentInteractionListener, DisplayNearbyPlacesFragment.OnFragmentInteractionListener,
-        UpdatedNearbyPlacesFragment.OnFragmentInteractionListener {
+        UpdatedNearbyPlacesFragment.OnFragmentInteractionListener, UserProfileFragment.OnFragmentInteractionListener,
+        WeatherFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView navigation;
 
@@ -73,8 +70,10 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     private static DatabaseReference dbEventNode;
     private static DatabaseReference dbExpenseNode;
 
-    private List<Events> eventsList;
-    private List<Expenses> expensesList;
+    private static LinearLayout linearLayout;
+
+    private static List<Events> eventsList;
+    private static List<Expenses> expensesList;
 
     public static String userId;
 
@@ -85,12 +84,16 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updated_main_menu);
 
+        eventsList = new ArrayList<>();
+        expensesList = new ArrayList<>();
+
+        eventsList.clear();
+
         if (userId != null)
 
             userId = null;
 
         initFields();
-        fetchEvents();
         loadViewEventsFragment();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -112,22 +115,26 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private void initFields() {
 
-        dbReference = FirebaseDatabase.getInstance().getReference();
+        readPrefs();
+
+        dbReference = FirebaseDatabase.getInstance().getReference().child(userId);
         dbEventNode = dbReference.child("Events");
         dbExpenseNode = dbReference.child("Expenses");
+        dbEventNode.keepSynced(true);
 
         navigation = findViewById(R.id.navigation);
         radioButtonGroup = findViewById(R.id.radioButtonGroup);
+        linearLayout = findViewById(R.id.radioLayout);
 
         fragmentManager = getSupportFragmentManager();
 
         viewEventsFragment = new ViewEventsFragment();
         viewExpensesFragment = new ViewExpensesFragment();
 
-        readPrefs();
-
         firebaseData = new FirebaseData(UpdatedMainMenuActivity.this);
         dbManager = new DatabaseManager(this);
+
+        fetchUserData();
 
         radioButtonGroup.setPosition(0);
 
@@ -164,7 +171,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private void nearbyPlacesClicked() {
 
-        radioButtonGroup.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.GONE);
 
         fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -173,22 +180,61 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         fragmentTransaction.commit();
     }
 
-    public void fetchEvents() {
+    private void userProfileClicked() {
 
-        eventsList = new ArrayList<>();
+        linearLayout.setVisibility(View.GONE);
 
-        dbEventNode.addValueEventListener(new ValueEventListener() {
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.updatedFragmentLayout, new UserProfileFragment());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    public void fetchUserData() {
+
+        dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                eventsList.clear();
+                SingleUser singleUser = dataSnapshot.getValue(SingleUser.class);
+
+                if (dbManager.insertSingleUser(singleUser))
+
+                    Log.d("Database", "User inserted");
+
+                else
+
+                    Log.d("Database", "User insertion failed");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Log.d("Userdata", databaseError.getMessage());
+            }
+        });
+    }
+
+    public void fetchEvents() {
+
+        dbEventNode.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int count = 0;
 
                 for (DataSnapshot i : dataSnapshot.getChildren()) {
 
                     Events singleEvent = i.getValue(Events.class);
                     dbManager.insertEventData(singleEvent);
+
+                    ++count;
                 }
+
+                StaticData.setNumberOfEvents(count);
             }
 
             @Override
@@ -199,11 +245,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         });
     }
 
-    public List<Expenses> fetchExpenses(String id) {
-
-        expensesList = new ArrayList<>();
-
-        Log.e("Event ID", id);
+    public void fetchExpenses(String id) {
 
         dbExpenseNode.child(id).addValueEventListener(new ValueEventListener() {
 
@@ -214,6 +256,8 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
                     expensesList.add(i.getValue(Expenses.class));
                 }
+
+                //StaticData.setTotalExpenseAmount(expensesList);
             }
 
             @Override
@@ -222,8 +266,6 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
                 Log.e("Failed", databaseError.getMessage());
             }
         });
-
-        return expensesList;
     }
 
     @Override
@@ -243,12 +285,12 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
             case R.id.navigation_maps:
 
-                Toast.makeText(UpdatedMainMenuActivity.this, "Maps", Toast.LENGTH_SHORT).show();
+                showWeatherClicked();
                 return true;
 
             case R.id.navigation_memories:
 
-                Toast.makeText(UpdatedMainMenuActivity.this, "Memories", Toast.LENGTH_SHORT).show();
+                userProfileClicked();
                 return true;
         }
 
@@ -270,7 +312,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     private void loadViewEventsFragment() {
 
         radioButtonGroup.setPosition(0);
-        radioButtonGroup.setVisibility(View.VISIBLE);
+        linearLayout.setVisibility(View.VISIBLE);
 
         fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -287,9 +329,24 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         fragmentTransaction.commit();
     }
 
+    private void showWeatherClicked() {
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.updatedFragmentLayout, new WeatherFragment());
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public SingleUser getUserInfo() {
+
+        fetchUserData();
+        return dbManager.getSingleUserData();
     }
 
     @Override
@@ -310,12 +367,6 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     }
 
     @Override
-    public List<Expenses> fetchExpenseData(String id) {
-
-        return fetchExpenses(id);
-    }
-
-    @Override
     public void addExpense(Expenses expense) {
 
         if (firebaseData.addExpense(expense))
@@ -327,25 +378,14 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     public void addEventDetails(Events event) {
 
         firebaseData.addEvent(event);
-        fetchEvents();
     }
 
     @Override
     public List<Events> getAllEvents() {
 
-        List<Events> mEventsList = dbManager.getAllEventsData();
-
-        if (mEventsList != null) {
-
-            fetchEvents();
-            Log.e("Event Data", String.valueOf(mEventsList.size()));
-        }
-
-        else
-
-            fetchEvents();
-
-        return mEventsList;
+        eventsList = dbManager.getAllEventsData();
+        StaticData.setNumberOfEvents(eventsList.size());
+        return eventsList;
     }
 
     public boolean checkLocationPermission(){
@@ -405,6 +445,22 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     }
 
     private void signOutUser() {
+
+        if (eventsList != null)
+
+            eventsList.clear();
+
+        if (expensesList != null)
+
+            expensesList.clear();
+
+        if (dbManager.deleteAllData())
+
+            Log.e("Deletion", "successful");
+
+        else
+
+            Log.e("Deletion", "failed");
 
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(UpdatedMainMenuActivity.this, MainActivity.class);
