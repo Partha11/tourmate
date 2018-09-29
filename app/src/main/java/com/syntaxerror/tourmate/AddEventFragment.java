@@ -1,5 +1,6 @@
 package com.syntaxerror.tourmate;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,9 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.syntaxerror.tourmate.pojos.Events;
+
+import java.util.Calendar;
 
 public class AddEventFragment extends Fragment implements View.OnClickListener {
 
@@ -33,6 +37,8 @@ public class AddEventFragment extends Fragment implements View.OnClickListener {
     private EditText travelEstBudget;
 
     private Button createEventButton;
+
+    private String selectedDate;
 
     public AddEventFragment() {
         // Required empty public constructor
@@ -70,8 +76,28 @@ public class AddEventFragment extends Fragment implements View.OnClickListener {
 
         createEventButton = view.findViewById(R.id.createEventButton);
         createEventButton.setOnClickListener(this);
+        travelToDate.setOnClickListener(this);
+        travelFromDate.setOnClickListener(this);
 
         return view;
+    }
+
+    private String datePicker() {
+
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                selectedDate = day + "-" + (month + 1) + "-" + year;
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+
+        return selectedDate;
     }
 
     public void onButtonPressed(Uri uri) {
@@ -145,6 +171,16 @@ public class AddEventFragment extends Fragment implements View.OnClickListener {
                 fragmentTransaction.replace(R.id.updatedFragmentLayout, new ViewEventsFragment());
                 fragmentTransaction.commit();
             }
+        }
+
+        else if (v == travelToDate) {
+
+            travelToDate.setText(datePicker());
+        }
+
+        else if (v == travelFromDate) {
+
+            travelFromDate.setText(datePicker());
         }
     }
 

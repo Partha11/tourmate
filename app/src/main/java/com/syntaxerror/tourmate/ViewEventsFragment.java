@@ -1,5 +1,6 @@
 package com.syntaxerror.tourmate;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +31,7 @@ import com.syntaxerror.tourmate.database.DatabaseManager;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.NearbyPlaceData;
 import com.syntaxerror.tourmate.pojos.StaticData;
+import com.syntaxerror.tourmate.pojos.SwipeDismissListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +59,7 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
     private FragmentManager fragmentManager;
 
     private DatabaseReference dbEventNode;
+    private DatabaseReference dbExpenseNode;
     private DatabaseManager dbManager;
 
     private AddEventFragment addEvent;
@@ -86,6 +92,7 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
         View view = inflater.inflate(R.layout.fragment_view_events, container, false);
 
         dbEventNode = FirebaseDatabase.getInstance().getReference().child(UpdatedMainMenuActivity.userId).child("Events");
+        dbExpenseNode = FirebaseDatabase.getInstance().getReference().child(UpdatedMainMenuActivity.userId).child("Expenses");
 
         mListView = view.findViewById(R.id.viewEventsList);
         fab = view.findViewById(R.id.fabEvents);
@@ -101,6 +108,8 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                eventsList.clear();
 
                 for (DataSnapshot i : dataSnapshot.getChildren()) {
 
@@ -121,7 +130,50 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
             }
         });
 
+        StaticData.setTotalExpenseAmount(dbManager.getAllEventsData());
         fab.addOnMenuItemClickListener(this);
+
+        SwipeDismissListener swipeDismissListener = new SwipeDismissListener(mListView, new SwipeDismissListener.DismissCallbacks() {
+
+            @Override
+            public boolean canDismiss(int position) {
+
+                return true;
+            }
+
+            @Override
+            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+
+                for (int i : reverseSortedPositions) {
+
+                    final String eventId = eventsList.get(i).getEventId();
+                    final int id = i;
+
+                    dbEventNode.child(eventId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            dbExpenseNode.child(eventId).removeValue();
+                            eventsList.remove(id);
+                            dbManager.deleteSingleEvent(eventId);
+                            eventAdapter.notifyDataSetChanged();
+
+                            Toast.makeText(mContext, "Event Removed", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Toast.makeText(mContext, "An Error Occurred", Toast.LENGTH_SHORT).show();
+                            Log.d("ViewEvents", e.getLocalizedMessage());
+                        }
+                    });
+                }
+            }
+        });
+
+        mListView.setOnTouchListener(swipeDismissListener);
 
         return view;
     }

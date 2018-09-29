@@ -6,9 +6,19 @@ public class Expenses {
     private String time;
     private String expenseDetails;
     private String expenseAmount;
+    private String eventDetails;
 
     public Expenses() {
 
+    }
+
+    public Expenses(String eventId, String time, String expenseDetails, String expenseAmount, String eventDetails) {
+
+        this.eventId = eventId;
+        this.time = time;
+        this.expenseDetails = expenseDetails;
+        this.expenseAmount = expenseAmount;
+        this.eventDetails = eventDetails;
     }
 
     public Expenses(String eventId, String time, String expenseDetails, String expenseAmount) {
@@ -17,6 +27,11 @@ public class Expenses {
         this.time = time;
         this.expenseDetails = expenseDetails;
         this.expenseAmount = expenseAmount;
+    }
+
+    public String getEventDetails() {
+
+        return eventDetails;
     }
 
     public String getEventId() {

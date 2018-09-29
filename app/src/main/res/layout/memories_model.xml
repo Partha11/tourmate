@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/item_layout"
+    android:padding="5dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:textSize="15sp"
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:id="@+id/firstLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/firstImg"
+            android:layout_width="0dp"
+            android:layout_height="250sp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:layout_marginRight="5dp" />
+
+        <ImageView
+            android:id="@+id/secondImg"
+            android:layout_width="0dp"
+            android:layout_height="250sp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:layout_marginRight="5dp" />
+
+        <ImageView
+            android:id="@+id/thirdImg"
+            android:layout_width="0dp"
+            android:layout_height="250sp"
+            android:layout_weight="1"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/fourthImg"
+            android:layout_width="0dp"
+            android:layout_height="250sp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:layout_marginRight="5dp" />
+
+        <ImageView
+            android:id="@+id/fifthImg"
+            android:layout_width="0dp"
+            android:layout_height="250sp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="5dp" />
+
+        <ImageView
+            android:id="@+id/sixthImg"
+            android:layout_width="0dp"
+            android:layout_height="250sp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter" />
+
+    </LinearLayout>
+
+</LinearLayout>

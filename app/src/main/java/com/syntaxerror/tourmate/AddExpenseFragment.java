@@ -3,10 +3,10 @@ package com.syntaxerror.tourmate;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.Expenses;
-import com.syntaxerror.tourmate.pojos.NearbyPlaceData;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +40,7 @@ public class AddExpenseFragment extends Fragment implements View.OnClickListener
 
     private Spinner mSpinner;
     private EditText eventExpenseAmount;
+    private TextView eventExpenseDetails;
 
     private List<Events> eventsList;
 
@@ -87,6 +83,7 @@ public class AddExpenseFragment extends Fragment implements View.OnClickListener
         mSpinner = view.findViewById(R.id.eventSpinner);
         eventExpenseAmount = view.findViewById(R.id.eventExpenseAmount);
         mSaveButton = view.findViewById(R.id.saveExpense);
+        eventExpenseDetails = view.findViewById(R.id.expenseDetails);
 
         eventsList = new ArrayList<>();
         eventsList = mListener.getAllEvents();
@@ -175,19 +172,31 @@ public class AddExpenseFragment extends Fragment implements View.OnClickListener
 
         if (v == mSaveButton) {
 
-            String expenseAmount = eventExpenseAmount.getText().toString();
+            if (TextUtils.isEmpty(eventExpenseDetails.getText().toString()))
 
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat timeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-            String eventTime = timeFormat.format(calendar.getTime());
+                eventExpenseDetails.setError("Please Enter Expense Details");
 
-            mListener.addExpense(new Expenses(eventId, eventTime, eventDescription, expenseAmount));
+            else if (TextUtils.isEmpty(eventExpenseAmount.getText().toString()))
 
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                eventExpenseAmount.setError("Please Enter Expense Amount");
 
-            fragmentTransaction.replace(R.id.updatedFragmentLayout, new ViewExpensesFragment());
-            fragmentTransaction.commit();
+            else {
+
+                String expenseDetails = eventExpenseDetails.getText().toString().trim();
+                String expenseAmount = eventExpenseAmount.getText().toString();
+
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat timeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                String eventTime = timeFormat.format(calendar.getTime());
+
+                mListener.addExpense(new Expenses(eventId, eventTime, expenseDetails, expenseAmount, eventDescription));
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.replace(R.id.updatedFragmentLayout, new ViewExpensesFragment());
+                fragmentTransaction.commit();
+            }
         }
     }
 

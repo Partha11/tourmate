@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.syntaxerror.tourmate.database.DatabaseManager;
+import com.syntaxerror.tourmate.permissions.RequestPermissionHandler;
 import com.syntaxerror.tourmate.pojos.Events;
 import com.syntaxerror.tourmate.pojos.Expenses;
 import com.syntaxerror.tourmate.pojos.FirebaseData;
@@ -43,17 +46,15 @@ import java.util.List;
 
 import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
 
 public class UpdatedMainMenuActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         RadioRealButtonGroup.OnClickedButtonListener, ViewEventsFragment.OnFragmentInteractionListener,
         ViewExpensesFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
         AddExpenseFragment.OnFragmentInteractionListener, DisplayNearbyPlacesFragment.OnFragmentInteractionListener,
         UpdatedNearbyPlacesFragment.OnFragmentInteractionListener, UserProfileFragment.OnFragmentInteractionListener,
-        WeatherFragment.OnFragmentInteractionListener {
+        WeatherFragment.OnFragmentInteractionListener, MemoriesFragment.OnFragmentInteractionListener {
 
-    private BottomNavigationView navigation;
+    private AHBottomNavigation navigation;
 
     private RadioRealButtonGroup radioButtonGroup;
 
@@ -78,6 +79,10 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     public static String userId;
 
     public static final int REQUEST_LOCATION_PERMISSION = 69;
+    public static final int REQUEST_STORAGE_PERMISSION = 70;
+    public static final int RC_READ_STORAGE = 72;
+
+    private RequestPermissionHandler mRequestPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
             userId = null;
 
         initFields();
+        checkPermissions();
         loadViewEventsFragment();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -111,6 +117,36 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
             Log.d("onCreate","Google Play Services available.");
         }
+    }
+
+    private void checkPermissions() {
+
+        mRequestPermission = new RequestPermissionHandler();
+
+        mRequestPermission.requestPermission(this, new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE },
+                REQUEST_STORAGE_PERMISSION, new RequestPermissionHandler.RequestPermissionListener() {
+
+            @Override
+            public void onSuccess() {
+
+                Log.d("UpdatedMainMenuActivity", "Permission Granted");
+            }
+
+            @Override
+            public void onFailed() {
+
+                Log.d("UpdatedMainMenuActivity", "Permission Denied");
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mRequestPermission.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void initFields() {
@@ -138,7 +174,70 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
         radioButtonGroup.setPosition(0);
 
-        navigation.setOnNavigationItemSelectedListener(this);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Home", R.drawable.ic_home);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Nearby", R.drawable.ic_maps);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Profile", R.drawable.ic_user_tp);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Memories", R.drawable.ic_memories);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem("Weather", R.drawable.ic_weather);
+
+        navigation.addItem(item1);
+        navigation.addItem(item2);
+        navigation.addItem(item3);
+        navigation.addItem(item4);
+        navigation.addItem(item5);
+
+        navigation.setDefaultBackgroundColor(Color.parseColor("#bebdbd"));
+        navigation.setAccentColor(Color.parseColor("#006A5D"));
+        navigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+        navigation.setCurrentItem(0);
+
+        // Set listeners
+        navigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+
+                switch (position) {
+
+                    case 0:
+
+                        loadViewEventsFragment();
+                        return true;
+
+                    case 1:
+
+                        nearbyPlacesClicked();
+                        return true;
+
+                    case 2:
+
+                        userProfileClicked();
+                        return true;
+
+                    case 3:
+
+                        showMemoriesClicked();
+                        return true;
+
+                    case 4:
+
+                        showWeatherClicked();
+                        return true;
+                }
+
+                return false;
+            }
+        });
+
+        navigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
+
+            @Override public void onPositionChange(int y) {
+
+            }
+        });
+
+
+        //navigation.setOnNavigationItemSelectedListener(this);
         radioButtonGroup.setOnClickedButtonListener(this);
     }
 
@@ -199,6 +298,8 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 SingleUser singleUser = dataSnapshot.getValue(SingleUser.class);
+
+                Log.d("UpdatedMainMenuActivity", singleUser.getProfileImage());
 
                 if (dbManager.insertSingleUser(singleUser))
 
@@ -309,6 +410,20 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
             loadViewExpenseFragment();
     }
 
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        dbManager.deleteSingleUser();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        dbManager.deleteSingleUser();
+    }
+
     private void loadViewEventsFragment() {
 
         radioButtonGroup.setPosition(0);
@@ -331,9 +446,23 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
     private void showWeatherClicked() {
 
+        radioButtonGroup.setPosition(0);
+        linearLayout.setVisibility(View.GONE);
+
         fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.updatedFragmentLayout, new WeatherFragment());
+        fragmentTransaction.commit();
+    }
+
+    private void showMemoriesClicked() {
+
+        radioButtonGroup.setPosition(0);
+        linearLayout.setVisibility(View.GONE);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.updatedFragmentLayout, new MemoriesFragment());
         fragmentTransaction.commit();
     }
 
@@ -352,18 +481,7 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
     @Override
     public LatLng getLatLng() {
 
-        final LatLng[] mLatLng = new LatLng[1];
-
-        SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
-
-            @Override
-            public void onLocationUpdated(Location location) {
-
-                mLatLng[0] = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-        });
-
-        return mLatLng[0];
+        return null;
     }
 
     @Override
@@ -388,8 +506,10 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         return eventsList;
     }
 
-    public boolean checkLocationPermission(){
+    public boolean checkLocationPermission() {
+
         if (ContextCompat.checkSelfPermission(this,
+
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -439,6 +559,10 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
                 signOutUser();
                 break;
+
+            case R.id.action_settings:
+
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -461,6 +585,8 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
         else
 
             Log.e("Deletion", "failed");
+
+        dbManager.deleteSingleUser();
 
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(UpdatedMainMenuActivity.this, MainActivity.class);

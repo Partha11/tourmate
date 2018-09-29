@@ -19,8 +19,13 @@ public interface ApiInterface {
                                     @Query("radius") String radius,
                                     @Query("key") String key);
 
-    /*@GET("distancematrix/json")
-    Call<DistanceLine.ResultDistanceMatrix> getDistance (@Query("key") String key,
-                                                         @Query("origins") String origins,
-                                                         @Query("destinations") String destinations);*/
+/*    @GET("data/2.5/weather?")
+    Call<WeatherData> getCurrentWeather(@Query("lat") String lat,
+                                        @Query("lon") String lon,
+                                        @Query("APPID") String appid);*/
+
+    @GET("data/2.5/forecast?")
+    Call<WeatherAdvanced> getWeatherInfos(@Query("q") String q,
+                                      @Query("units") String units,
+                                      @Query("APPID") String appid);
 }

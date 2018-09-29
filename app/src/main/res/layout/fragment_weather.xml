@@ -1,14 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/weather_bg"
     tools:context=".WeatherFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/weatherDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weather"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24sp"
+        android:textColor="@color/colorWhite"
+        android:inputType="textCapWords"
+        android:textSize="45sp"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/weatherPlaceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place Name"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/weatherDetails"
+        android:layout_marginTop="10sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/weatherPlaceTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temperature"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/weatherPlaceName"
+        android:layout_marginTop="10sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="60sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dayOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MON"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"/>
+
+            <ImageView
+                android:id="@+id/imageFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_email"/>
+
+            <TextView
+                android:id="@+id/weatherDayFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dayTwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TUE"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"/>
+
+            <ImageView
+                android:id="@+id/imageSecond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_email"/>
+
+            <TextView
+                android:id="@+id/weatherDaySecond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dayThree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:text="WED"
+                android:layout_gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"/>
+
+            <ImageView
+                android:id="@+id/imageThird"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_email"/>
+
+            <TextView
+                android:id="@+id/weatherDayThird"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Temp"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dayFour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="THU"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:textSize="20sp"/>
+
+            <ImageView
+                android:id="@+id/imageFourth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_email"/>
+
+            <TextView
+                android:id="@+id/weatherDayFourth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Temp"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dayFive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FRI"
+                android:textColor="@color/colorWhite"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5sp"
+                android:textSize="20sp"/>
+
+            <ImageView
+                android:id="@+id/imageFifth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_email"/>
+
+            <TextView
+                android:id="@+id/weatherDayFifth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp"
+                android:textColor="@color/colorWhite"
+                android:layout_gravity="center"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

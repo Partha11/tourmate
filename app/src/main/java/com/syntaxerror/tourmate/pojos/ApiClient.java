@@ -1,9 +1,5 @@
 package com.syntaxerror.tourmate.pojos;
 
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -16,12 +12,6 @@ public class ApiClient {
     public static String base_url = "https://maps.googleapis.com/maps/api/";
 
     public static Retrofit getClient() {
-
-/*        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient client = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS).addInterceptor(interceptor).build();*/
 
         retrofit = null;
         retrofit = new Retrofit.Builder()

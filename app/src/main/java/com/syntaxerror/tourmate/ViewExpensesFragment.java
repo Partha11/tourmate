@@ -100,8 +100,6 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
 
         View view = inflater.inflate(R.layout.fragment_view_expenses, container, false);
 
-        dbExpenseNode = FirebaseDatabase.getInstance().getReference().child(UpdatedMainMenuActivity.userId).child("Expenses");
-
         getActivity().setTitle("Expenses");
 
         fab = view.findViewById(R.id.fabExpense);
@@ -121,6 +119,10 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
 
             eventsList = new ArrayList<>();
 
+        else
+
+            Log.d("Eventslist", eventsList.toString());
+
         initSpinner();
 
         expenseAdapter = new ExpenseAdapter(mContext, R.layout.view_expense_model, expensesList);
@@ -137,20 +139,24 @@ public class ViewExpensesFragment extends Fragment implements FabSpeedDial.OnMen
 
                     Log.d("EventId", eventId);
 
-                    Query query = dbExpenseNode.orderByChild("eventId").equalTo(eventId);
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    dbExpenseNode = FirebaseDatabase.getInstance().getReference().child(UpdatedMainMenuActivity.userId)
+                            .child("Expenses").child(eventId);
+                    dbExpenseNode.addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            expensesList.clear();
 
                             for (DataSnapshot i : dataSnapshot.getChildren()) {
 
                                 Expenses expenses = i.getValue(Expenses.class);
                                 expensesList.add(expenses);
-                                expenseAdapter.notifyDataSetChanged();
 
                                 Log.d("Expenses", expenses.getEventId());
                             }
+
+                            expenseAdapter.notifyDataSetChanged();
                         }
 
                         @Override

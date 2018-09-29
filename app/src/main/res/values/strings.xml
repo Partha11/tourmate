@@ -33,7 +33,6 @@
     <string name="temp_information">26, partly cloudy</string>
     <string name="wind">WIND</string>
     <string name="wind_speed">18 km/h</string>
-    <string name="humidity">HUMIDITY</string>
     <string name="humidity_rate">73%</string>
     <string name="day_of_week">Mon</string>
     <string name="location_hints">Type city or postcode</string>
@@ -42,4 +41,25 @@
     <string name="stored_location">You can only store 5 locations</string>
     <string name="permission_notice">This permission is important but you can as well set your location on Location page</string>
     <string name="go_to_location">Go to location setting</string>
+    <string name="snow_">Snow : %1$.2f %2$s</string>
+    <string name="humidity">Humidity : %d %%</string>
+    <string name="pressure">Pressure : %.2f hPa</string>
+
+    <string name="wind_">Wind : %1$.2f %2$s</string>
+
+    <string name="wind_blowing_in">Wind Blowing towards %s</string>
+    <string name="north">North</string>
+    <string name="north_east">North-East</string>
+    <string name="north_west">North-West</string>
+    <string name="south">South</string>
+    <string name="south_east">South-East</string>
+    <string name="south_west">South-West</string>
+    <string name="east">East</string>
+    <string name="west">West</string>
+
+    <string name="home">Home</string>
+    <string name="nearby">Nearby</string>
+    <string name="profile">Profile</string>
+    <string name="memories">Memories</string>
+    <string name="weather">Weather</string>
 </resources>

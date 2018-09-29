@@ -3,7 +3,6 @@ package com.syntaxerror.tourmate.pojos;
 import android.util.Patterns;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SingleUser {
 
@@ -13,6 +12,7 @@ public class SingleUser {
     private String userGender;
     private String userAge;
     private FullName fullName;
+    private String profileImage;
 
     public SingleUser() {
 
@@ -59,6 +59,22 @@ public class SingleUser {
     public SingleUser(String userMail) {
 
         this.userMail = userMail;
+    }
+
+    public SingleUser(String userId, String userMail, String userName, String userGender, String userAge, FullName fullName, String profileImage) {
+
+        this.userId = userId;
+        this.userMail = userMail;
+        this.userName = userName;
+        this.userGender = userGender;
+        this.userAge = userAge;
+        this.fullName = fullName;
+        this.profileImage = profileImage;
+    }
+
+    public String getProfileImage() {
+
+        return profileImage;
     }
 
     public FullName getFullName() {

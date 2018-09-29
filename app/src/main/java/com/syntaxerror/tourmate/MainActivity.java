@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     public static final String PREF_USER_NAME = "username";
     public static final String PREF_USER_MAIL = "usermail";
     public static final String PREF_USER_ID = "userId";
+    public static final String PREF_USER_PASSWORD = "userPassword";
     public static final String PREF_USER_FB_TOKEN = "fbtoken";
 
     @Override
@@ -176,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                                     @Override
                                     public void onSuccess(Void aVoid) {
 
+                                        updatePrefsPassword(null);
                                         switchActivity();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -199,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     }
 
     @Override
-    public void userLogIn(final String userEmailOrName, String userPassword) {
+    public void userLogIn(final String userEmailOrName, final String userPassword) {
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -265,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                             if (task.isSuccessful()) {
 
                                 updatePrefs(userId);
+                                updatePrefsPassword(userPassword);
                                 finish();
                                 switchActivity();
                             }
@@ -347,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
                         }
                     });
 
+                    updatePrefsPassword(userPassword);
                     Toast.makeText(MainActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                 }
 
@@ -380,6 +384,17 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         editor.apply();
 
         Log.e("Message", userId);
+    }
+
+    private void updatePrefsPassword(String userPassword) {
+
+        SharedPreferences prefs = this.getSharedPreferences(USER_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString(PREF_USER_PASSWORD, userPassword);
+        editor.apply();
+
+        Log.e("Message", userPassword);
     }
 
     private void updatePrefs(String userId, String fbToken) {

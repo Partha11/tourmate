@@ -4,9 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,21 +17,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -42,28 +36,11 @@ import com.syntaxerror.tourmate.pojos.ApiClient;
 import com.syntaxerror.tourmate.pojos.ApiInterface;
 import com.syntaxerror.tourmate.pojos.GetNearbyPlacesData;
 import com.syntaxerror.tourmate.pojos.Nearby;
-import com.syntaxerror.tourmate.pojos.NearbyPlaces;
-import com.syntaxerror.tourmate.pojos.PlaceJson;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
 
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, FabSpeedDial.OnMenuItemClickListener,
@@ -86,10 +63,10 @@ public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyC
     double latitude;
     double longitude;
     private int PROXIMITY_RADIUS = 5000;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private Marker mCurrLocationMarker;
+    private LocationRequest mLocationRequest;
 
     public UpdatedNearbyPlacesFragment() {
         // Required empty public constructor
@@ -127,6 +104,8 @@ public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyC
     @Override
     public void onStop() {
         super.onStop();
+
+        mMap.clear();
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
@@ -182,9 +161,7 @@ public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyC
                 try {
 
                     mMap.clear();
-
                     Nearby nearbyPlace = response.body();
-
                     Log.e("Info", nearbyPlace.getStatus());
 
                     if (nearbyPlace.getStatus() != null) {

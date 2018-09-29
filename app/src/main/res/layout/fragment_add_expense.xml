@@ -8,16 +8,58 @@
     <Spinner
         android:id="@+id/eventSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"/>
 
-
-    <EditText
-        android:id="@+id/eventExpenseAmount"
+    <LinearLayout
+        android:id="@+id/firstLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/eventSpinner"
-        android:hint="Expense Amount"
-        android:textSize="20sp"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Details"
+            android:layout_weight="2"
+            android:layout_marginRight="5dp"/>
+
+        <EditText
+            android:id="@+id/eventExpenseDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginLeft="5dp"
+            android:hint="Eg. Chips"
+            android:inputType="text"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/firstLinearLayout">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Amount"
+            android:layout_weight="2"
+            android:layout_marginRight="5dp"/>
+
+        <EditText
+            android:id="@+id/eventExpenseAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="Eg. 500"
+            android:inputType="text"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/saveExpense"

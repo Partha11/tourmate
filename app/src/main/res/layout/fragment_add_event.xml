@@ -1,52 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddEventFragment"
-    android:padding="10dp"
-    android:orientation="vertical">
+    android:padding="10dp">
 
-    <EditText
-        android:id="@+id/travelDestination"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Travel Destination"
-        android:layout_marginBottom="20dp"/>
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
 
-    <EditText
-        android:id="@+id/estimatedBudget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/travelDestination"
-        android:hint="Estimated Budget"
-        android:layout_marginBottom="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
 
-    <EditText
-        android:id="@+id/fromDate"
-        android:layout_below="@id/estimatedBudget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="From Date"
-        android:layout_marginBottom="20dp"/>
-    <EditText
-        android:id="@+id/toDate"
-        android:layout_below="@id/fromDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="To Date"
-        android:layout_marginBottom="20dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Destination"
+                android:textSize="20sp"
+                android:gravity="left"
+                android:layout_marginRight="10dp"/>
 
-    <Button
-        android:id="@+id/createEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toDate"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:background="#22b9ff"
-        android:text="Create Event"
-        android:textAllCaps="false"
-        android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/travelDestination"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:hint="Destination"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"/>
 
-</LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Budget"
+                android:textSize="20sp"
+                android:gravity="left"
+                android:layout_marginRight="10dp"/>
+
+            <EditText
+                android:id="@+id/estimatedBudget"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="Est Budget"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:inputType="number"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Begins From"
+                android:textSize="20sp"
+                android:gravity="left"
+                android:layout_marginRight="10dp"/>
+
+            <EditText
+                android:id="@+id/fromDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="Pick Date"
+                android:gravity="center"
+                android:focusable="false"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Ends At"
+                android:textSize="20sp"
+                android:gravity="left"
+                android:layout_marginRight="10dp"/>
+
+            <EditText
+                android:id="@+id/toDate"
+                android:layout_below="@id/fromDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="Pick Date"
+                android:gravity="center"
+                android:focusable="false"/>
+
+        </LinearLayout>
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/createEventButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:background="#22b9ff"
+            android:text="Create Event"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
