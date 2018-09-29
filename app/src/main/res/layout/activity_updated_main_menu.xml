@@ -35,6 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:rrb_text="Events"
+                android:fontFamily="@font/cantarell"
                 app:rrb_textColor="@color/black"
                 app:rrb_textSize="20sp"/>
 
@@ -43,6 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:rrb_text="Expenses"
+                android:fontFamily="@font/cantarell"
                 app:rrb_textSize="20sp"
                 app:rrb_textColor="@color/black" />
 

@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="Destination"
+                android:fontFamily="@font/cantarell"
                 android:textSize="20sp"
                 android:gravity="left"
                 android:layout_marginRight="10dp"/>
@@ -35,6 +36,7 @@
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:hint="Destination"
+                android:fontFamily="@font/cantarell"
                 android:textSize="20sp"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"/>
@@ -52,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="Budget"
+                android:fontFamily="@font/cantarell"
                 android:textSize="20sp"
                 android:gravity="left"
                 android:layout_marginRight="10dp"/>
@@ -62,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:hint="Est Budget"
+                android:fontFamily="@font/cantarell"
                 android:gravity="center"
                 android:textSize="20sp"
                 android:inputType="number"/>
@@ -79,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="Begins From"
+                android:fontFamily="@font/cantarell"
                 android:textSize="20sp"
                 android:gravity="left"
                 android:layout_marginRight="10dp"/>
@@ -89,6 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:hint="Pick Date"
+                android:fontFamily="@font/cantarell"
                 android:gravity="center"
                 android:focusable="false"
                 android:textSize="20sp"/>
@@ -107,6 +113,7 @@
                 android:layout_weight="2"
                 android:text="Ends At"
                 android:textSize="20sp"
+                android:fontFamily="@font/cantarell"
                 android:gravity="left"
                 android:layout_marginRight="10dp"/>
 
@@ -117,6 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:hint="Pick Date"
+                android:fontFamily="@font/cantarell"
                 android:gravity="center"
                 android:focusable="false"/>
 

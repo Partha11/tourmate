@@ -559,10 +559,6 @@ public class UpdatedMainMenuActivity extends AppCompatActivity implements Bottom
 
                 signOutUser();
                 break;
-
-            case R.id.action_settings:
-
-                break;
         }
 
         return super.onOptionsItemSelected(item);

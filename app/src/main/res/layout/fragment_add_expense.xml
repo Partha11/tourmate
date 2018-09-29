@@ -21,6 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Details"
+            android:fontFamily="@font/cantarell"
             android:layout_weight="2"
             android:layout_marginRight="5dp"/>
 
@@ -31,6 +32,7 @@
             android:layout_weight="2"
             android:layout_marginLeft="5dp"
             android:hint="Eg. Chips"
+            android:fontFamily="@font/cantarell"
             android:inputType="text"
             android:textSize="20sp"/>
 
@@ -47,6 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Amount"
+            android:fontFamily="@font/cantarell"
             android:layout_weight="2"
             android:layout_marginRight="5dp"/>
 
@@ -56,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:hint="Eg. 500"
+            android:fontFamily="@font/cantarell"
             android:inputType="text"
             android:textSize="20sp"/>
 
@@ -65,7 +69,8 @@
         android:id="@+id/saveExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/eventExpenseAmount"
+        android:layout_below="@+id/secondLinearLayout"
+        android:fontFamily="@font/cantarell"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20sp"
         android:text="Save"

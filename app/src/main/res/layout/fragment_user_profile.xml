@@ -58,6 +58,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="76dp"
                 android:text="Username"
+                android:fontFamily="@font/cantarell"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -71,6 +72,7 @@
                 android:text="Email"
                 android:layout_below="@+id/profileUserName"
                 android:textColor="@color/black"
+                android:fontFamily="@font/cantarell"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -93,6 +95,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="Total Events"
+                    android:fontFamily="@font/cantarell"
                     android:background="@drawable/total_events_bg"
                     android:textColor="@color/colorWhite"
                     android:layout_marginRight="5dp"
@@ -106,6 +109,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Total Expense"
+                    android:fontFamily="@font/cantarell"
                     android:elevation="4dp"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/total_expense_bg"
@@ -140,6 +144,7 @@
                     android:layout_weight="2"
                     android:layout_marginRight="5dp"
                     android:gravity="center"
+                    android:fontFamily="@font/cantarell"
                     android:text="First Name"
                     android:textSize="20sp"/>
 
@@ -152,6 +157,7 @@
                     android:layout_weight="2"
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
+                    android:fontFamily="@font/cantarell"
                     android:text="Last Name"
                     android:textSize="20sp"/>
 
@@ -173,6 +179,7 @@
                     android:paddingLeft="10dp"
                     android:gravity="left"
                     android:text="Current Password"
+                    android:fontFamily="@font/cantarell"
                     android:textSize="20sp"/>
 
                 <android.support.v7.widget.AppCompatEditText
@@ -183,6 +190,7 @@
                     android:paddingBottom="5dp"
                     android:gravity="center"
                     android:hint="Current Password"
+                    android:fontFamily="@font/cantarell"
                     android:inputType="textPassword"
                     android:textSize="20sp"/>
 
@@ -202,6 +210,7 @@
                     android:layout_weight="2"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
+                    android:fontFamily="@font/cantarell"
                     android:gravity="left"
                     android:text="New Password"
                     android:textSize="20sp"/>
@@ -214,6 +223,7 @@
                     android:layout_weight="2"
                     android:elevation="4dp"
                     android:paddingBottom="5dp"
+                    android:fontFamily="@font/cantarell"
                     android:gravity="center"
                     android:hint=" New Password"
                     android:inputType="textPassword"
@@ -235,6 +245,7 @@
                     android:layout_weight="2"
                     android:gravity="left"
                     android:paddingLeft="10dp"
+                    android:fontFamily="@font/cantarell"
                     android:text="Gender"
                     android:textSize="20sp" />
 
@@ -271,6 +282,7 @@
                     android:padding="5dp"
                     android:gravity="center"
                     android:hint="Gender"
+                    android:fontFamily="@font/cantarell"
                     android:inputType="textAutoComplete"
                     android:textSize="20sp"
                     android:visibility="gone"/>
@@ -292,6 +304,7 @@
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:gravity="left"
+                    android:fontFamily="@font/cantarell"
                     android:text="Age"
                     android:textSize="20sp"/>
 
@@ -303,6 +316,7 @@
                     android:elevation="4dp"
                     android:layout_weight="2"
                     android:paddingBottom="5dp"
+                    android:fontFamily="@font/cantarell"
                     android:gravity="center"
                     android:hint="Age"
                     android:inputType="number"
@@ -316,6 +330,8 @@
                 android:layout_height="wrap_content"
                 android:text="Update"
                 android:textSize="20sp"
+                android:textColor="@color/colorWhite"
+                android:fontFamily="@font/cantarell"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center"/>
 
