@@ -87,7 +87,7 @@
                 android:paddingBottom="10dp"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/profileTotalEvents"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                     android:elevation="4dp"
                     android:textSize="20sp" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/profileTotalExpenses"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                 android:layout_gravity="center"
                 android:weightSum="4">
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/profileFirstName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
                     android:text="First Name"
                     android:textSize="20sp"/>
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/profileLastName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
                 android:layout_marginTop="10dp"
                 android:weightSum="4">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -182,7 +182,7 @@
                     android:fontFamily="@font/cantarell"
                     android:textSize="20sp"/>
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/profileCurrentPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                 android:layout_marginTop="10dp"
                 android:weightSum="4">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -215,7 +215,7 @@
                     android:text="New Password"
                     android:textSize="20sp"/>
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/profilePassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -239,7 +239,7 @@
                 android:layout_marginTop="10dp"
                 android:weightSum="4">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -274,7 +274,7 @@
 
                 </RadioGroup>
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:elevation="4dp"
@@ -297,7 +297,7 @@
                 android:layout_marginTop="10dp"
                 android:weightSum="4">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -308,7 +308,7 @@
                     android:text="Age"
                     android:textSize="20sp"/>
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/profileAge"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -324,7 +324,7 @@
 
             </LinearLayout>
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/profileUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

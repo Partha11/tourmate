@@ -60,7 +60,7 @@
                 android:layout_marginRight="10dp"/>
 
             <EditText
-                android:id="@+id/estimatedBudget"
+                android:id="@+id/budget"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -130,7 +130,7 @@
 
         </LinearLayout>
 
-        <android.support.design.button.MaterialButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/createEventButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
