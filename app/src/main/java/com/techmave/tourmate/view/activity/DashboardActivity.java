@@ -4,45 +4,42 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.techmave.tourmate.AddEventFragment;
 import com.techmave.tourmate.AddExpenseFragment;
 import com.techmave.tourmate.DisplayNearbyPlacesFragment;
 import com.techmave.tourmate.R;
 import com.techmave.tourmate.UserProfileFragment;
 import com.techmave.tourmate.ViewEventsFragment;
-import com.techmave.tourmate.ViewExpensesFragment;
 import com.techmave.tourmate.pojo.Event;
 import com.techmave.tourmate.pojo.Expenses;
 import com.techmave.tourmate.pojo.SingleUser;
 import com.techmave.tourmate.utils.Constants;
 import com.techmave.tourmate.utils.SharedPrefs;
-import com.techmave.tourmate.viewmodel.DashboardViewModel;
+import com.techmave.tourmate.view.fragment.EventFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        ViewEventsFragment.OnFragmentInteractionListener, ViewExpensesFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
+        ViewEventsFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
         AddExpenseFragment.OnFragmentInteractionListener, DisplayNearbyPlacesFragment.OnFragmentInteractionListener,
         UserProfileFragment.OnFragmentInteractionListener {
 
@@ -57,6 +54,14 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null && FirebaseApp.getApps(this).isEmpty()) {
+
+            FirebaseApp.initializeApp(this);
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
 
         initialize();
         checkPermissions();
@@ -84,38 +89,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
 
     private void initialize() {
 
-        DashboardViewModel viewModel = ViewModelProviders.of(this).get(DashboardViewModel.class);
         prefs = new SharedPrefs(this);
-
-        Log.d("Uid", prefs.getUid());
-
-        viewModel.setLiveData(prefs.getUid());
-        viewModel.getUserToken(prefs.getUid()).observe(this, d -> {
-
-            if (d != null) {
-
-                String token = d.getValue(String.class);
-
-                if (!TextUtils.equals(token, prefs.getToken())) {
-
-                    viewModel.getAllEvents().observe(this, dataSnapshot -> {
-
-                        if (dataSnapshot.hasChildren()) {
-
-                            Log.d("Event", dataSnapshot.toString());
-                            List<Event> events = new ArrayList<>();
-
-                            for (DataSnapshot d1 : dataSnapshot.getChildren()) {
-
-                                events.add(d1.getValue(Event.class));
-                            }
-
-                            viewModel.insertEvents(events);
-                        }
-                    });
-                }
-            }
-        });
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Home", R.drawable.ic_home);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Nearby", R.drawable.ic_maps);
@@ -132,6 +106,8 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         navigation.setDefaultBackgroundColor(Color.parseColor("#bebdbd"));
         navigation.setAccentColor(Color.parseColor("#006A5D"));
         navigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+
+        replaceFragment(Constants.HOME_FRAGMENT);
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -178,7 +154,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-            transaction.replace(R.id.frame_layout, new ViewExpensesFragment());
+            transaction.replace(R.id.frame_layout, new EventFragment());
             transaction.commit();
         }
     }

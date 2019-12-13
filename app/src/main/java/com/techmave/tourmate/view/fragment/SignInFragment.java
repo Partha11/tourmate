@@ -16,11 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.techmave.tourmate.R;
 
 import java.util.Arrays;
@@ -38,8 +33,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
     private Button loginButton;
-    private CallbackManager callbackManager;
-    private LoginButton mFacebookLoginButton;
 
     private EditText userEmail;
     private EditText userPassword;
@@ -89,7 +82,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
         signInButton = view.findViewById(R.id.signInButton);
         loginButton = view.findViewById(R.id.fbLoginButton);
-        mFacebookLoginButton = view.findViewById(R.id.hiddenFbButton);
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -104,7 +96,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -174,32 +165,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
         else if (v == loginButton) {
 
-            callbackManager = CallbackManager.Factory.create();
-
-            mFacebookLoginButton.performClick();
-            mFacebookLoginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
-            mFacebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-
-//                    mListener.facebookLogin(loginResult.getAccessToken());
-
-                    Log.e("Permissions", loginResult.getRecentlyGrantedPermissions().toString());
-                }
-
-                @Override
-                public void onCancel() {
-
-                    Toast.makeText(mContext, "Operation Canceled By User!", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(FacebookException exception) {
-
-                    Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 

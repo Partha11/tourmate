@@ -1,56 +1,74 @@
 package com.techmave.tourmate.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.techmave.tourmate.R;
 import com.techmave.tourmate.pojo.Event;
 
 import java.util.List;
 
-public class EventAdapter extends ArrayAdapter<Event> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private Context mContext;
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+
+    private Context context;
     private List<Event> eventList;
-    private int mResource;
 
-    private TextView eventTitle;
-    private TextView fromDate;
-    private TextView toDate;
-    private TextView estBudget;
+    public EventAdapter(Context context, List<Event> eventList) {
 
-    public EventAdapter(@NonNull Context context, int resource, @NonNull List<Event> objects) {
-
-        super(context, resource, objects);
-
-        mContext = context;
-        eventList = objects;
-        mResource = resource;
+        this.context = context;
+        this.eventList = eventList;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        convertView = inflater.inflate(mResource, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.model_view_event, parent, false);
+        return new ViewHolder(view);
+    }
 
-        eventTitle = convertView.findViewById(R.id.eventTitle);
-        fromDate = convertView.findViewById(R.id.eventFromDate);
-        toDate = convertView.findViewById(R.id.eventToDate);
-        estBudget = convertView.findViewById(R.id.eventEstimatedBudget);
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        eventTitle.setText(eventList.get(position).getDescription());
-        fromDate.setText(eventList.get(position).getFromDate());
-        toDate.setText(eventList.get(position).getToDate());
-        estBudget.setText(eventList.get(position).getBudget());
+        holder.eventTitle.setText(eventList.get(position).getDescription());
+        holder.eventStartDate.setText(eventList.get(position).getEventTag());
+    }
 
-        return convertView;
+    @Override
+    public int getItemCount() {
+
+        return eventList == null ? 0 : eventList.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.event_title)
+        AppCompatTextView eventTitle;
+        @BindView(R.id.event_tag)
+        AppCompatTextView eventTag;
+        @BindView(R.id.event_location)
+        AppCompatTextView eventLocation;
+        @BindView(R.id.event_start_date)
+        AppCompatTextView eventStartDate;
+
+        ViewHolder(@NonNull View itemView) {
+
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.event_details_button)
+        public void onViewClicked() {
+        }
     }
 }

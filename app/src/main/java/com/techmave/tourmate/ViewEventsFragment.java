@@ -99,9 +99,11 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
         addEvent = new AddEventFragment();
 
         eventList = new ArrayList<>();
-        eventAdapter = new EventAdapter(mContext, R.layout.view_event_model, eventList);
+/*
+        eventAdapter = new EventAdapter(mContext, R.layout.model_view_event, eventList);
         eventAdapter.notifyDataSetChanged();
         mListView.setAdapter(eventAdapter);
+*/
 
         dbEventNode.addValueEventListener(new ValueEventListener() {
 

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.techmave.tourmate.pojo.Event;
 import com.techmave.tourmate.pojo.Expenses;
+import com.techmave.tourmate.view.fragment.EventFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -194,7 +195,7 @@ public class AddExpenseFragment extends Fragment implements View.OnClickListener
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                fragmentTransaction.replace(R.id.frame_layout, new ViewExpensesFragment());
+                fragmentTransaction.replace(R.id.frame_layout, new EventFragment());
                 fragmentTransaction.commit();
             }
         }
