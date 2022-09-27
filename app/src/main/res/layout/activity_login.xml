@@ -49,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        tools:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/_80sdp">
 
@@ -110,8 +111,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/_80sdp"
-        android:visibility="gone">
+        android:layout_marginBottom="@dimen/_80sdp">
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

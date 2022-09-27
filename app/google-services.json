@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "986073180658",
-    "firebase_url": "https://tour-mate-2aff1.firebaseio.com",
-    "project_id": "tour-mate-2aff1",
-    "storage_bucket": "tour-mate-2aff1.appspot.com"
+    "project_number": "284334838440",
+    "firebase_url": "https://tpg-auto-app-9e22e-default-rtdb.firebaseio.com",
+    "project_id": "tpg-auto-app-9e22e",
+    "storage_bucket": "tpg-auto-app-9e22e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:986073180658:android:d82380a0192a5fc098236b",
+        "mobilesdk_app_id": "1:284334838440:android:8d8963402b3b567db6a89d",
         "android_client_info": {
-          "package_name": "com.techmave.tourmate"
+          "package_name": "com.supernova.tpgmaster"
         }
       },
       "oauth_client": [
         {
-          "client_id": "986073180658-2o3gjdln9immo1o2phm3uv1nejnbbq9v.apps.googleusercontent.com",
+          "client_id": "284334838440-94mm677j1s3r3ei40bv7p55k03j2bb2t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBgVKAuivLG4An9ctrTMzRirmuIg6CC8Vo"
+          "current_key": "AIzaSyBU6AibkjtG4zjFw35lmC76QrJNtAbzEmY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "986073180658-2o3gjdln9immo1o2phm3uv1nejnbbq9v.apps.googleusercontent.com",
+              "client_id": "284334838440-94mm677j1s3r3ei40bv7p55k03j2bb2t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -37,27 +37,27 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:986073180658:android:546b3296c4d8452e",
+        "mobilesdk_app_id": "1:284334838440:android:6d1c9607ee6f8ba8b6a89d",
         "android_client_info": {
-          "package_name": "com.tiptoptips.tourmate"
+          "package_name": "com.twainarc.tourmate"
         }
       },
       "oauth_client": [
         {
-          "client_id": "986073180658-2o3gjdln9immo1o2phm3uv1nejnbbq9v.apps.googleusercontent.com",
+          "client_id": "284334838440-94mm677j1s3r3ei40bv7p55k03j2bb2t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBgVKAuivLG4An9ctrTMzRirmuIg6CC8Vo"
+          "current_key": "AIzaSyBU6AibkjtG4zjFw35lmC76QrJNtAbzEmY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "986073180658-2o3gjdln9immo1o2phm3uv1nejnbbq9v.apps.googleusercontent.com",
+              "client_id": "284334838440-94mm677j1s3r3ei40bv7p55k03j2bb2t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

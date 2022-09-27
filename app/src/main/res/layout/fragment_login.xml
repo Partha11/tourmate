@@ -8,7 +8,7 @@
         android:id="@+id/view_bar"
         android:layout_width="6dp"
         android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_26sdp"
         android:layout_marginStart="@dimen/_20sdp"
         android:background="@color/color_primary"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,14 +28,14 @@
         android:id="@+id/guideline_h_70"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.70"
+        app:layout_constraintGuide_percent="0.65"
         android:orientation="horizontal"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/app_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/_14sdp"
+        android:textSize="@dimen/_14ssp"
         android:textColor="@color/color_primary"
         android:text="@string/welcome"
         android:fontFamily="@font/open_sans"
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/darker_gray"
-        android:textSize="@dimen/_12sdp"
+        android:textSize="@dimen/_12ssp"
         android:text="@string/sub_heading"
         android:fontFamily="@font/open_sans"
         android:layout_marginTop="@dimen/_2sdp"
@@ -105,9 +105,23 @@
         android:text="@string/user_login"
         android:textSize="@dimen/_11ssp"
         android:textColor="@color/white"
+        android:insetTop="3dp"
+        android:insetBottom="3dp"
         app:backgroundTint="@color/color_primary"
         app:layout_constraintTop_toBottomOf="@id/login_password_layout"
         app:layout_constraintStart_toStartOf="@id/login_password_layout"
         app:layout_constraintEnd_toEndOf="@id/login_password_layout"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/sign_up_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_9ssp"
+        android:text="@string/no_account"
+        android:fontFamily="@font/open_sans"
+        android:layout_marginBottom="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

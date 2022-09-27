@@ -6,11 +6,25 @@
     app:startDestination="@id/fragment_login">
 
     <fragment android:id="@+id/fragment_login"
-        android:name="com.techmave.tourmate.view.fragment.auth.LoginFragment"
-        tools:layout="@layout/fragment_login"/>
+        android:name="com.twainarc.tourmate.view.fragment.auth.LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+        <action android:id="@+id/action_login_to_register"
+            app:popUpTo="@id/fragment_login"
+            app:popUpToInclusive="true"
+            app:destination="@id/fragment_register"/>
+
+    </fragment>
 
     <fragment android:id="@+id/fragment_register"
-        android:name="com.techmave.tourmate.view.fragment.auth.RegisterFragment"
-        tools:layout="@layout/fragment_register"/>
+        android:name="com.twainarc.tourmate.view.fragment.auth.RegisterFragment"
+        tools:layout="@layout/fragment_register">
+
+        <action android:id="@+id/action_register_to_login"
+            app:popUpTo="@id/fragment_register"
+            app:popUpToInclusive="true"
+            app:destination="@id/fragment_login"/>
+
+    </fragment>
 
 </navigation>
