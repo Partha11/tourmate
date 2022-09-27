@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.techmave.tourmate.R;
-import com.techmave.tourmate.pojo.NearbyPlaces;
+import com.techmave.tourmate.model.NearbyPlaces;
 
 import java.util.List;
 

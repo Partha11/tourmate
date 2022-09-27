@@ -27,8 +27,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.techmave.tourmate.adapters.GalleryAdapter;
 import com.techmave.tourmate.database.DatabaseManager;
-import com.techmave.tourmate.pojo.Event;
-import com.techmave.tourmate.view.activity.DashboardActivity;
+import com.techmave.tourmate.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;

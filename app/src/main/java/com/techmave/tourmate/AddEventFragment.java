@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import com.techmave.tourmate.pojo.Event;
+import com.techmave.tourmate.model.Event;
 
 import java.util.Calendar;
 

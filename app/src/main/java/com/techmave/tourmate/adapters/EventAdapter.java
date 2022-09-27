@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.techmave.tourmate.R;
-import com.techmave.tourmate.pojo.Event;
+import com.techmave.tourmate.model.Event;
 
 import org.apache.commons.lang3.StringUtils;
 

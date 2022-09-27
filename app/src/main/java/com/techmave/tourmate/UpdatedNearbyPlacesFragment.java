@@ -10,10 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -31,11 +29,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.techmave.tourmate.pojo.ApiClient;
-import com.techmave.tourmate.pojo.ApiInterface;
-import com.techmave.tourmate.pojo.GetNearbyPlacesData;
-import com.techmave.tourmate.pojo.Nearby;
+import com.techmave.tourmate.model.ApiClient;
+import com.techmave.tourmate.model.ApiInterface;
+import com.techmave.tourmate.model.GetNearbyPlacesData;
+import com.techmave.tourmate.model.Nearby;
 
 import retrofit2.Call;
 import retrofit2.Callback;

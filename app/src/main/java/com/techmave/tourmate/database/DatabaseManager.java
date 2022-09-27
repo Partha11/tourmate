@@ -8,9 +8,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.techmave.tourmate.pojo.Event;
-import com.techmave.tourmate.pojo.FullName;
-import com.techmave.tourmate.pojo.SingleUser;
+import com.techmave.tourmate.model.Event;
+import com.techmave.tourmate.model.SingleUser;
 
 import java.util.ArrayList;
 import java.util.List;

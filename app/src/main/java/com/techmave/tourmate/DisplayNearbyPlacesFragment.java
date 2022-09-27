@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.techmave.tourmate.adapters.NearbyPlacesAdapter;
-import com.techmave.tourmate.pojo.NearbyPlaceData;
-import com.techmave.tourmate.pojo.NearbyPlaces;
+import com.techmave.tourmate.model.NearbyPlaceData;
+import com.techmave.tourmate.model.NearbyPlaces;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.techmave.tourmate.pojo.Response;
+import com.techmave.tourmate.model.Response;
 import com.techmave.tourmate.utils.Constants;
 
 import java.util.HashMap;

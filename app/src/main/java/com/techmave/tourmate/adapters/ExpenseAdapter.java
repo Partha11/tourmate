@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.techmave.tourmate.R;
-import com.techmave.tourmate.pojo.Expenses;
+import com.techmave.tourmate.model.Expenses;
 
 import java.util.List;
 

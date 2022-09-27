@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/view_bar"
+        android:layout_width="6dp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:background="@color/color_primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <View
+        android:id="@+id/view_control"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="@id/view_bar"
+        app:layout_constraintBottom_toBottomOf="@id/view_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_h_70"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.70"
+        android:orientation="horizontal"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/app_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="@color/color_primary"
+        android:text="@string/welcome"
+        android:fontFamily="@font/open_sans"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
+        app:layout_constraintBottom_toTopOf="@id/view_control"
+        app:layout_constraintStart_toEndOf="@id/view_bar"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="@dimen/_12sdp"
+        android:text="@string/sub_heading"
+        android:fontFamily="@font/open_sans"
+        android:layout_marginTop="@dimen/_2sdp"
+        app:layout_constraintTop_toBottomOf="@id/view_control"
+        app:layout_constraintStart_toStartOf="@id/app_title"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_email_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_14sdp"
+        android:layout_marginEnd="@dimen/_14sdp"
+        android:hint="@string/user_email"
+        app:layout_constraintTop_toBottomOf="@id/guideline_h_70"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/_11sdp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_password_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:hint="@string/user_password"
+        app:layout_constraintTop_toBottomOf="@id/login_email_layout"
+        app:layout_constraintStart_toStartOf="@id/login_email_layout"
+        app:layout_constraintEnd_toEndOf="@id/login_email_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPassword"
+            android:textSize="@dimen/_11sdp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textAllCaps="false"
+        android:text="@string/user_login"
+        android:textSize="@dimen/_11ssp"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/color_primary"
+        app:layout_constraintTop_toBottomOf="@id/login_password_layout"
+        app:layout_constraintStart_toStartOf="@id/login_password_layout"
+        app:layout_constraintEnd_toEndOf="@id/login_password_layout"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

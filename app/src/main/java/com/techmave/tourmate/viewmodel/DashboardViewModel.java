@@ -10,7 +10,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.techmave.tourmate.database.UserDatabase;
-import com.techmave.tourmate.pojo.Event;
+import com.techmave.tourmate.model.Event;
 import com.techmave.tourmate.repository.DashboardRepository;
 import com.techmave.tourmate.repository.FirebaseQueryLiveData;
 

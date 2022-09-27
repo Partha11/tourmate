@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.techmave.tourmate.R;
@@ -57,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         prefs = new SharedPrefs(this);
-        viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+//        viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
     }
 
     @OnClick({R.id.login_button, R.id.sign_up_button, R.id.register_button, R.id.sign_in_button})

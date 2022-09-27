@@ -18,8 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.techmave.tourmate.pojo.Event;
-import com.techmave.tourmate.pojo.Expenses;
+import com.techmave.tourmate.model.Event;
+import com.techmave.tourmate.model.Expenses;
 import com.techmave.tourmate.view.fragment.EventFragment;
 
 import java.text.SimpleDateFormat;

@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import com.techmave.tourmate.database.UserDao;
-import com.techmave.tourmate.pojo.Event;
+import com.techmave.tourmate.model.Event;
 
 import java.util.List;
 

@@ -6,8 +6,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.techmave.tourmate.pojo.Event;
-import com.techmave.tourmate.pojo.Image;
+import com.techmave.tourmate.model.Event;
+import com.techmave.tourmate.model.Image;
 import com.techmave.tourmate.utils.Constants;
 
 import java.util.List;

@@ -15,8 +15,7 @@ import android.widget.Toast;
 
 import com.techmave.tourmate.R;
 import com.techmave.tourmate.database.DatabaseManager;
-import com.techmave.tourmate.pojo.FullName;
-import com.techmave.tourmate.pojo.SingleUser;
+import com.techmave.tourmate.model.SingleUser;
 import com.techmave.tourmate.utils.Utility;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {

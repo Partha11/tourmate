@@ -6,8 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.techmave.tourmate.pojo.Event;
-import com.techmave.tourmate.pojo.Image;
+import com.techmave.tourmate.model.Event;
+import com.techmave.tourmate.model.Image;
 import com.techmave.tourmate.utils.Constants;
 
 @Database(entities = {Event.class, Image.class}, version = Constants.DATABASE_VERSION, exportSchema = false)

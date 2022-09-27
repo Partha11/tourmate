@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.techmave.tourmate.pojo.Response;
+import com.techmave.tourmate.model.Response;
 import com.techmave.tourmate.repository.LoginRepository;
 
 public class LoginViewModel extends AndroidViewModel {

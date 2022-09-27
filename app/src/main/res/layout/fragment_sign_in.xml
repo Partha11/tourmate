@@ -101,11 +101,11 @@
             android:text="Join Now"
             android:textAllCaps="false"/>
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/hiddenFbButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
+<!--        <com.facebook.login.widget.LoginButton-->
+<!--            android:id="@+id/hiddenFbButton"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone"/>-->
 
     </LinearLayout>
 

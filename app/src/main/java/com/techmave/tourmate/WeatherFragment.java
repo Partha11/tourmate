@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.techmave.tourmate.pojo.ApiInterface;
-import com.techmave.tourmate.pojo.WeatherAdvanced;
-import com.techmave.tourmate.pojo.WeatherClient;
-import com.techmave.tourmate.pojo.WeatherDataList;
+import com.techmave.tourmate.model.ApiInterface;
+import com.techmave.tourmate.model.WeatherAdvanced;
+import com.techmave.tourmate.model.WeatherClient;
+import com.techmave.tourmate.model.WeatherDataList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
