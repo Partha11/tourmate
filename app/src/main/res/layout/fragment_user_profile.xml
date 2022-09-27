@@ -97,7 +97,7 @@
                     android:text="Total Events"
                     android:fontFamily="@font/cantarell"
                     android:background="@drawable/total_events_bg"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/white"
                     android:layout_marginRight="5dp"
                     android:elevation="4dp"
                     android:textSize="20sp" />
@@ -330,7 +330,7 @@
                 android:layout_height="wrap_content"
                 android:text="Update"
                 android:textSize="20sp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/white"
                 android:fontFamily="@font/cantarell"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center"/>

@@ -39,9 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        ViewEventsFragment.OnFragmentInteractionListener, AddEventFragment.OnFragmentInteractionListener,
-        AddExpenseFragment.OnFragmentInteractionListener, DisplayNearbyPlacesFragment.OnFragmentInteractionListener,
-        UserProfileFragment.OnFragmentInteractionListener {
+        AddEventFragment.OnFragmentInteractionListener, AddExpenseFragment.OnFragmentInteractionListener,
+        DisplayNearbyPlacesFragment.OnFragmentInteractionListener, UserProfileFragment.OnFragmentInteractionListener {
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation navigation;

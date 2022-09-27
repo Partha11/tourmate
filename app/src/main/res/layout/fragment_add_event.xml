@@ -138,7 +138,7 @@
             android:layout_marginBottom="20dp"
             android:background="#22b9ff"
             android:text="Create Event"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textAllCaps="false"
             android:layout_gravity="center"/>

@@ -3,12 +3,6 @@ package com.techmave.tourmate;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +11,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,14 +31,11 @@ import com.techmave.tourmate.database.DatabaseManager;
 import com.techmave.tourmate.pojo.Event;
 import com.techmave.tourmate.pojo.StaticData;
 import com.techmave.tourmate.pojo.SwipeDismissListener;
-import com.techmave.tourmate.view.activity.DashboardActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
-
-public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuItemClickListener {
+public class ViewEventsFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -45,14 +43,10 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-
     private Context mContext;
     private ListView mListView;
     private EventAdapter eventAdapter;
     private List<Event> eventList;
-
-    private FabSpeedDial fab;
 
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
@@ -94,7 +88,6 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
         dbExpenseNode = FirebaseDatabase.getInstance().getReference().child("gg").child("Expenses");
 
         mListView = view.findViewById(R.id.viewEventsList);
-        fab = view.findViewById(R.id.fabEvents);
         fragmentManager = getActivity().getSupportFragmentManager();
         addEvent = new AddEventFragment();
 
@@ -132,7 +125,6 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
         });
 
         StaticData.setTotalExpenseAmount(dbManager.getAllEventsData());
-        fab.addOnMenuItemClickListener(this);
 
         SwipeDismissListener swipeDismissListener = new SwipeDismissListener(mListView, new SwipeDismissListener.DismissCallbacks() {
 
@@ -179,52 +171,15 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-
-        if (mListener != null) {
-
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
 
         super.onAttach(context);
 
-        if (context instanceof OnFragmentInteractionListener) {
-
-            mListener = (OnFragmentInteractionListener) context;
-        }
-
-        else {
-
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-
         getActivity().setTitle("Event");
         mContext = context;
 
         dbManager = new DatabaseManager(mContext);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
-    public void onMenuItemClick(FloatingActionButton miniFab, @Nullable TextView label, int itemId) {
-
-        if (label.getText().toString().trim().equals("Add Event"))
-
-            addTravelEventClicked();
-
-        else
-
-            addExpenseClicked();
     }
 
     private void addTravelEventClicked() {
@@ -243,10 +198,5 @@ public class ViewEventsFragment extends Fragment implements FabSpeedDial.OnMenuI
         fragmentTransaction.replace(R.id.frame_layout, new AddExpenseFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }

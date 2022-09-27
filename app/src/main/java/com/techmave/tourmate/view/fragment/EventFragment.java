@@ -4,23 +4,25 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.internal.NavigationMenu;
 import com.google.firebase.database.DataSnapshot;
 import com.techmave.tourmate.R;
 import com.techmave.tourmate.adapters.EventAdapter;
+import com.techmave.tourmate.dialog.EventDialog;
 import com.techmave.tourmate.pojo.Event;
 import com.techmave.tourmate.utils.SharedPrefs;
 import com.techmave.tourmate.utils.Utility;
@@ -38,13 +40,13 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
 
-public class EventFragment extends Fragment implements FabSpeedDial.OnMenuItemClickListener {
+public class EventFragment extends Fragment implements FabSpeedDial.MenuListener {
 
     @BindView(R.id.event_recycler)
     RecyclerView eventRecycler;
-    @BindView(R.id.fabExpense)
+    @BindView(R.id.event_fab)
     FabSpeedDial fab;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -77,6 +79,8 @@ public class EventFragment extends Fragment implements FabSpeedDial.OnMenuItemCl
         adapter = new EventAdapter(context, eventList);
 
         progressBar.setVisibility(View.VISIBLE);
+        fab.setMenuListener(this);
+
         eventRecycler.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
         eventRecycler.setItemAnimator(new DefaultItemAnimator());
         eventRecycler.setAdapter(adapter);
@@ -142,8 +146,27 @@ public class EventFragment extends Fragment implements FabSpeedDial.OnMenuItemCl
     }
 
     @Override
-    public void onMenuItemClick(FloatingActionButton miniFab, @Nullable TextView label, int itemId) {
+    public boolean onPrepareMenu(NavigationMenu navigationMenu) {
 
-        Log.d("Item", String.valueOf(itemId));
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(MenuItem menuItem) {
+
+        Log.d("Id", String.valueOf(menuItem.getItemId()));
+
+        if (menuItem.getItemId() == R.id.add_event) {
+
+            DialogFragment fragment = new EventDialog();
+            fragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "addEvent");
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onMenuClosed() {
+        //Nothing
     }
 }

@@ -37,18 +37,14 @@ import com.techmave.tourmate.pojo.ApiInterface;
 import com.techmave.tourmate.pojo.GetNearbyPlacesData;
 import com.techmave.tourmate.pojo.Nearby;
 
-import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, FabSpeedDial.OnMenuItemClickListener,
-        com.google.android.gms.location.LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private Context mContext;
-
-    private FabSpeedDial fab;
 
     private MapView mapView;
     private GoogleMap mMap;
@@ -83,9 +79,6 @@ public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_updated_nearby_places, container, false);
-
-        fab = view.findViewById(R.id.nearbyFab);
-        fab.addOnMenuItemClickListener(this);
 
         mapView = view.findViewById(R.id.nearbyMap);
         mapView.onCreate(savedInstanceState);
@@ -330,7 +323,7 @@ public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyC
         return (googlePlacesUrl.toString());
     }
 
-    @Override
+/*    @Override
     public void onMenuItemClick(FloatingActionButton miniFab, @Nullable TextView label, int itemId) {
 
 
@@ -363,7 +356,7 @@ public class UpdatedNearbyPlacesFragment extends Fragment implements OnMapReadyC
 
             build_retrofit_and_get_response("hospital");
         }
-    }
+    }*/
 
     private void updateMap(String placeName) {
 

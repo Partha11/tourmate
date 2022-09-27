@@ -79,4 +79,9 @@
     <string name="passwords_dont_match">Passwords do not match</string>
     <string name="password_length_error">Password must be at least 6 character long</string>
 
+    <string name="event_title">Event Title</string>
+    <string name="event_description">Short Description</string>
+    <string name="event_start">Start Date</string>
+    <string name="event_end">End Date</string>
+
 </resources>

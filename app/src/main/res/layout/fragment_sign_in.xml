@@ -73,7 +73,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
-             android:textColor="@color/colorWhite"
+             android:textColor="@color/white"
             android:drawableLeft="@drawable/ic_facebook"
             android:padding="12dp"
             android:text="Facebook"
@@ -96,7 +96,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:background="@color/colorTeal"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:padding="12dp"
             android:text="Join Now"
             android:textAllCaps="false"/>

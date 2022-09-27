@@ -15,7 +15,7 @@
             android:id="@+id/bar"
             android:layout_width="6dp"
             android:layout_height="@dimen/_50sdp"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/color_primary"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_14sdp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/color_primary"
                 android:text="@string/welcome" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -206,7 +206,7 @@
             android:text="@string/sign_up"
             android:textSize="@dimen/_9sdp"
             android:clickable="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/color_primary"
             android:focusable="true" />
 
     </LinearLayout>
@@ -235,7 +235,7 @@
             android:text="@string/sign_in"
             android:textSize="@dimen/_9sdp"
             android:clickable="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/color_primary"
             android:focusable="true" />
 
     </LinearLayout>
